@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BINGO CARD｜OTAKU YEAR-END RAVE 2026</title>
+  <meta name="description" content="推し曲ビンゴのWebビンゴカード">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="logo" href="index.html">OTAKU<span>//</span>RAVE</a>
+    <button class="nav-toggle" aria-label="メニュー"><span></span><span></span><span></span></button>
+    <nav class="nav">
+      <a href="index.html#about">ABOUT</a>
+      <a href="index.html#bingo">BINGO</a>
+      <a href="index.html#info">INFO</a>
+      <a href="index.html#entry">ENTRY</a>
+      <a href="access.html">ACCESS</a>
+      <a href="bingo.html">CARD</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero" style="padding-bottom:20px">
+      <div class="container">
+        <div class="section-head reveal" style="margin-bottom:0">
+          <h1 class="en">BINGO CARD</h1>
+          <span class="ja">推し曲ビンゴカード</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding-top:20px">
+      <div class="container bingo-wrap">
+        <div class="demo-banner" id="demo-banner" hidden>
+          DEMO MODE ─ 曲の受付が終わるまではサンプル曲で表示しています。当日は参加者の曲でカードが作られます。
+        </div>
+
+        <form class="bingo-setup" id="setup">
+          <input id="player" type="text" maxlength="24" placeholder="ハンドルネームを入力" autocomplete="nickname" required>
+          <button class="btn" type="submit">カード生成</button>
+        </form>
+
+        <div id="card-area" hidden>
+          <div class="bingo-status">
+            <span id="player-label"></span>
+            <span>REACH <b id="reach">0</b> ／ BINGO <b id="bingo">0</b></span>
+          </div>
+          <div class="bingo-head" aria-hidden="true"><span>B</span><span>I</span><span>N</span><span>G</span><span>O</span></div>
+          <div class="bingo-grid" id="grid"></div>
+          <div class="bingo-actions">
+            <button class="btn ghost" type="button" id="clear">マークをリセット</button>
+            <button class="btn ghost" type="button" id="rename">名前を変更</button>
+          </div>
+          <p class="tentative" style="text-align:center;margin-top:18px">
+            ※ カードは名前ごとに固定です。同じ名前を入力すれば同じカードに戻ります。<br>
+            ※ ビンゴになったらこの画面をスタッフに見せてください。
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="bingo-burst" id="burst" role="dialog" aria-live="assertive">
+    <h2 id="burst-title"></h2>
+    <p>おめでとうございます！画面をスタッフに見せて景品を受け取ろう。</p>
+    <button class="btn" type="button" id="burst-close">CLOSE</button>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a class="logo" href="index.html">OTAKU<span>//</span>RAVE</a>
+      <p>© 2026 OTAKU YEAR-END RAVE 実行委員会</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/bingo.js"></script>
+</body>
+</html>

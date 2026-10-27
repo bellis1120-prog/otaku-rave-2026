@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ACCESS｜OTAKU YEAR-END RAVE 2026</title>
+  <meta name="description" content="会場 Entertainment BAR Guild（大阪・日本橋）へのアクセス">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="logo" href="index.html">OTAKU<span>//</span>RAVE</a>
+    <button class="nav-toggle" aria-label="メニュー"><span></span><span></span><span></span></button>
+    <nav class="nav">
+      <a href="index.html#about">ABOUT</a>
+      <a href="index.html#bingo">BINGO</a>
+      <a href="index.html#info">INFO</a>
+      <a href="index.html#entry">ENTRY</a>
+      <a href="access.html">ACCESS</a>
+      <a href="bingo.html">CARD</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="section-head reveal">
+          <h1 class="en">ACCESS</h1>
+          <span class="ja">会場アクセス</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding-top:0">
+      <div class="container">
+        <div class="access-grid">
+          <div class="panel glow reveal">
+            <p class="chip cyan" style="display:inline-block;margin-bottom:14px">VENUE</p>
+            <h2 class="venue-name" data-cfg="venue"></h2>
+            <dl class="dl">
+              <dt>ADDRESS</dt>
+              <dd><span data-cfg="zip"></span><br><span data-cfg="address"></span></dd>
+              <dt>DATE</dt>
+              <dd><span data-cfg="date"></span> <span data-cfg="time"></span></dd>
+              <dt>WEB</dt>
+              <dd><a id="venue-site" target="_blank" rel="noopener">公式サイト ↗</a></dd>
+            </dl>
+            <p class="warn" data-cfg="venueNote"></p>
+            <p style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+              <a class="btn" id="gmap-link" target="_blank" rel="noopener">Google マップで開く ↗</a>
+            </p>
+          </div>
+          <div class="map-frame reveal" id="map"></div>
+        </div>
+
+        <div class="routes reveal">
+          <article class="route panel stagger">
+            <span class="line-badge" style="background:#8b5a2b">SAKAISUJI LINE</span>
+            <h3>恵美須町駅</h3>
+            <p class="walk">1<small> MIN</small></p>
+            <p>Osaka Metro 堺筋線。1-B 番出口を出て南へ約30m。最寄り駅です。</p>
+          </article>
+          <article class="route panel stagger">
+            <span class="line-badge" style="background:#e5007f">SENNICHIMAE / SAKAISUJI / KINTETSU</span>
+            <h3>日本橋駅</h3>
+            <p class="walk">10<small> MIN</small></p>
+            <p>堺筋を南へ。でんでんタウン（オタロード周辺）を抜けて徒歩約10分。</p>
+          </article>
+          <article class="route panel stagger">
+            <span class="line-badge" style="background:#0067b0">NANKAI / MIDOSUJI</span>
+            <h3>なんば駅</h3>
+            <p class="walk">12<small> MIN</small></p>
+            <p>南海なんば駅から東へ、オタロード方面へ徒歩約12〜15分。</p>
+          </article>
+        </div>
+
+        <div class="panel notes reveal" style="margin-top:24px">
+          <h3 style="margin-bottom:14px;font-family:var(--font-en);letter-spacing:0.1em">NOTES</h3>
+          <ul>
+            <li>会場はビルの上階にあります。エレベーターをご利用ください。</li>
+            <li>会場周辺に専用駐車場はありません。公共交通機関をご利用ください。</li>
+            <li>大晦日のため、周辺の店舗や交通機関が通常と異なるダイヤ・営業時間の場合があります。</li>
+            <li>徒歩時間は目安です。迷った場合は主催者（<a data-contact></a>）までご連絡ください。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a class="logo" href="index.html">OTAKU<span>//</span>RAVE</a>
+      <p>© 2026 OTAKU YEAR-END RAVE 実行委員会</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (() => {
+      const v = window.EVENT_CONFIG.venue;
+      const q = encodeURIComponent(v.mapQuery);
+      document.getElementById("map").innerHTML =
+        `<iframe src="https://maps.google.com/maps?q=${q}&z=17&output=embed" loading="lazy" title="会場の地図" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+      document.getElementById("gmap-link").href = `https://www.google.com/maps/search/?api=1&query=${q}`;
+      document.getElementById("venue-site").href = v.site;
+    })();
+  </script>
+</body>
+</html>

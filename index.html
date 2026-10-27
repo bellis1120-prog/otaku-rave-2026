@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OTAKU YEAR-END RAVE 2026｜推し曲ビンゴ忘年会</title>
+  <meta name="description" content="2026.12.31 大阪・日本橋 Bar Guild で開催するオタク忘年会DJイベント。あなたの「私といえばこの曲」でビンゴ！">
+  <meta property="og:title" content="OTAKU YEAR-END RAVE 2026｜推し曲ビンゴ忘年会">
+  <meta property="og:description" content="2026.12.31 大阪・日本橋 Bar Guild。あなたの「私といえばこの曲」でビンゴ！">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="logo" href="index.html">OTAKU<span>//</span>RAVE</a>
+    <button class="nav-toggle" aria-label="メニュー"><span></span><span></span><span></span></button>
+    <nav class="nav">
+      <a href="index.html#about">ABOUT</a>
+      <a href="index.html#bingo">BINGO</a>
+      <a href="index.html#info">INFO</a>
+      <a href="index.html#entry">ENTRY</a>
+      <a href="access.html">ACCESS</a>
+      <a href="bingo.html">CARD</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <p class="hero-kicker" style="opacity:0">YEAR-END DJ PARTY @ OSAKA NIPPONBASHI</p>
+        <h1 class="hero-title">
+          <span class="line glitch" data-text="OTAKU">OTAKU</span>
+          <span class="line accent">YEAR-END</span>
+          <span class="line">RAVE 2026</span>
+        </h1>
+        <p class="hero-sub fade-up" style="opacity:0">
+          <span data-cfg="subtitle"></span>
+          <small data-cfg="tagline"></small>
+        </p>
+        <dl class="hero-meta fade-up" style="opacity:0">
+          <div><dt>DATE</dt><dd data-cfg="date"></dd></div>
+          <div><dt>TIME</dt><dd data-cfg="time"></dd></div>
+          <div><dt>VENUE</dt><dd>Bar Guild</dd></div>
+        </dl>
+        <div class="countdown" aria-label="開催までのカウントダウン">
+          <div class="unit"><div class="num" data-cd="d">--</div><div class="lbl">DAYS</div></div>
+          <div class="unit"><div class="num" data-cd="h">--</div><div class="lbl">HOURS</div></div>
+          <div class="unit"><div class="num" data-cd="m">--</div><div class="lbl">MIN</div></div>
+          <div class="unit"><div class="num" data-cd="s">--</div><div class="lbl">SEC</div></div>
+        </div>
+        <div class="hero-cta fade-up" style="opacity:0">
+          <a class="btn" href="#entry"><span>ENTRY</span> →</a>
+          <a class="btn ghost" href="access.html">ACCESS</a>
+        </div>
+      </div>
+      <div class="equalizer" aria-hidden="true"></div>
+      <div class="scroll-hint" aria-hidden="true">SCROLL<i></i></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2 class="en">ABOUT</h2>
+          <span class="ja">イベントについて</span>
+        </div>
+        <div class="about-grid">
+          <div class="reveal">
+            <p>オタクコミュニティで出会ったみんなで、2026年を全力で締めくくるDJ忘年会を開催します！</p>
+            <p>今回の主役は<strong>あなたの「私といえばこの曲」</strong>。参加申請のときに推し曲・テーマ曲・十八番を1曲教えてください。集まった曲は当日のDJセットに組み込まれ、<strong>流れた曲でビンゴ大会</strong>を行います。</p>
+            <p>「この曲、絶対あの人だ！」と盛り上がりながら、豪華景品をゲットしよう。</p>
+          </div>
+          <div class="reveal"><div class="vinyl" aria-hidden="true"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BINGO -->
+    <section id="bingo">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2 class="en">SONG BINGO</h2>
+          <span class="ja">推し曲ビンゴのあそびかた</span>
+        </div>
+        <div class="steps reveal">
+          <article class="step panel glow stagger">
+            <div class="no">01</div>
+            <h3>曲を申請</h3>
+            <p>参加申請フォームで「私といえばこの曲」を1曲記入。アニソン・ゲーム音楽・ボカロ、ジャンルは自由！</p>
+          </article>
+          <article class="step panel glow stagger">
+            <div class="no">02</div>
+            <h3>カードを生成</h3>
+            <p>当日、このサイトの「CARD」ページで名前を入力すると、みんなの曲から5×5のビンゴカードが作られます。</p>
+          </article>
+          <article class="step panel glow stagger">
+            <div class="no">03</div>
+            <h3>曲が流れたらタップ</h3>
+            <p>DJが流した曲がカードにあったらマスをタップ。誰の曲か当てながら楽しもう。</p>
+          </article>
+          <article class="step panel glow stagger">
+            <div class="no">04</div>
+            <h3>BINGO!</h3>
+            <p>縦・横・斜めがそろったらスタッフに画面を見せて景品ゲット。早い者勝ち！</p>
+          </article>
+        </div>
+        <div class="mini-card reveal" aria-hidden="true"></div>
+        <p class="bingo-note reveal"><a class="btn ghost" href="bingo.html">ビンゴカードを見る（デモ）</a></p>
+      </div>
+    </section>
+
+    <!-- PRIZE -->
+    <section id="prize">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2 class="en">PRIZE</h2>
+          <span class="ja">豪華景品</span>
+        </div>
+        <div class="prizes reveal">
+          <div class="prize panel top stagger">
+            <div class="rank">1ST BINGO</div>
+            <div class="mystery">???</div>
+            <p>当日のお楽しみ</p>
+          </div>
+          <div class="prize panel stagger">
+            <div class="rank">2ND BINGO</div>
+            <div class="mystery">???</div>
+            <p>当日のお楽しみ</p>
+          </div>
+          <div class="prize panel stagger">
+            <div class="rank">3RD BINGO</div>
+            <div class="mystery">???</div>
+            <p>当日のお楽しみ</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCHEDULE -->
+    <section id="schedule">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2 class="en">TIME TABLE</h2>
+          <span class="ja">当日の流れ</span>
+        </div>
+        <div class="panel reveal">
+          <ol class="timeline" id="timeline"></ol>
+          <p class="tentative">※ タイムテーブルは仮のものです。進行状況により前後する場合があります。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFO -->
+    <section id="info">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2 class="en">INFORMATION</h2>
+          <span class="ja">開催概要</span>
+        </div>
+        <div class="info-grid">
+          <div class="panel glow reveal">
+            <p class="chip cyan" style="display:inline-block">ENTRANCE FEE</p>
+            <p class="fee-total"><span data-cfg="total"></span> <small>/ 1人</small></p>
+            <div class="fee-break">
+              <span class="chip">参加費 <span data-cfg="fee"></span></span>
+              <span class="chip pink">＋ 1ドリンク <span data-cfg="drink"></span></span>
+            </div>
+            <p style="margin-top:14px;color:var(--muted);font-size:14px">当日受付にて現金でお支払いください。</p>
+          </div>
+          <div class="panel reveal">
+            <dl class="dl">
+              <dt>DATE</dt><dd><span data-cfg="date"></span></dd>
+              <dt>TIME</dt><dd><span data-cfg="time"></span></dd>
+              <dt>VENUE</dt><dd><span data-cfg="venue"></span><br><small style="color:var(--muted)" data-cfg="address"></small></dd>
+              <dt>CAPACITY</dt><dd data-cfg="capacity"></dd>
+              <dt>DEADLINE</dt><dd data-cfg="deadline"></dd>
+              <dt>CONTACT</dt><dd><a data-contact></a></dd>
+            </dl>
+            <p style="margin-top:18px"><a class="btn ghost" href="access.html">会場アクセスを見る →</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENTRY -->
+    <section id="entry" class="entry">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2 class="en">ENTRY</h2>
+          <span class="ja">参加申請</span>
+        </div>
+        <div class="panel glow reveal">
+          <p class="lead">参加申請フォームから申し込んでください</p>
+          <p style="color:var(--muted)">フォームでは以下の項目をお伺いします。</p>
+          <div class="fields">
+            <span class="chip">お名前（ハンドルネーム）</span>
+            <span class="chip pink">私といえばこの曲</span>
+            <span class="chip">アーティスト名</span>
+            <span class="chip">ひとことメッセージ</span>
+          </div>
+          <div>
+            <a class="btn" data-form-link href="#"><span class="label">ENTRY FORM</span> ↗</a>
+          </div>
+          <div class="form-embed" id="form-embed" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2 class="en">FAQ</h2>
+          <span class="ja">よくある質問</span>
+        </div>
+        <div class="faq panel reveal">
+          <details>
+            <summary><span>どんな曲を申請すればいいですか？</span></summary>
+            <p>「この曲を聴くと自分を思い出してもらえそう」な1曲ならなんでもOK！推しのキャラソン、カラオケの十八番、思い出のゲームBGMなど、ジャンルは問いません。</p>
+          </details>
+          <details>
+            <summary><span>申請した曲は必ず流れますか？</span></summary>
+            <p>できる限りすべての曲をDJセットに組み込みますが、時間の都合や音源の入手状況によって流れない場合があります。ご了承ください。</p>
+          </details>
+          <details>
+            <summary><span>ビンゴカードはどうやって使いますか？</span></summary>
+            <p>当日、スマートフォンでこのサイトの「CARD」ページを開き、名前を入力するとカードが生成されます。紙のカードは配布しないので、スマホの充電をお忘れなく。</p>
+          </details>
+          <details>
+            <summary><span>途中参加・途中退場はできますか？</span></summary>
+            <p>可能です。受付で参加費とドリンク代をお支払いください。</p>
+          </details>
+          <details>
+            <summary><span>追加のドリンクは注文できますか？</span></summary>
+            <p>はい、会場のバーカウンターで追加注文できます（別料金）。</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a class="logo" href="index.html">OTAKU<span>//</span>RAVE</a>
+      <p>© 2026 OTAKU YEAR-END RAVE 実行委員会</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
