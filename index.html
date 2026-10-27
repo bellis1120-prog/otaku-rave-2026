@@ -25,6 +25,7 @@
       <a href="index.html#bingo">BINGO</a>
       <a href="index.html#info">INFO</a>
       <a href="index.html#entry">ENTRY</a>
+      <a href="index.html#entries">ENTRIES</a>
       <a href="access.html">ACCESS</a>
       <a href="bingo.html">CARD</a>
     </nav>
@@ -93,26 +94,26 @@
           <article class="step panel glow stagger">
             <div class="no">01</div>
             <h3>曲を申請</h3>
-            <p>参加申請フォームで「私といえばこの曲」を1曲記入。アニソン・ゲーム音楽・ボカロ、ジャンルは自由！</p>
+            <p>参加申請フォームで「私といえばこの曲」を最大<span data-cfg="songsPerPerson"></span>曲記入。アニソン・ゲーム音楽・ボカロ、ジャンルは自由！</p>
           </article>
           <article class="step panel glow stagger">
             <div class="no">02</div>
-            <h3>カードを生成</h3>
-            <p>当日、このサイトの「CARD」ページで名前を入力すると、みんなの曲から5×5のビンゴカードが作られます。</p>
+            <h3>カードを自作</h3>
+            <p>「CARD」ページで5×5のマスに好きな曲を自由に書き込もう。みんなの申請曲から選ぶのが勝利の近道。埋めたら「確定」！</p>
           </article>
           <article class="step panel glow stagger">
             <div class="no">03</div>
             <h3>曲が流れたらタップ</h3>
-            <p>DJが流した曲がカードにあったらマスをタップ。誰の曲か当てながら楽しもう。</p>
+            <p>DJが流した曲がカードにあったらマスをタップして穴を開けよう。誰の曲か当てながら楽しもう。</p>
           </article>
           <article class="step panel glow stagger">
             <div class="no">04</div>
             <h3>BINGO!</h3>
-            <p>縦・横・斜めがそろったらスタッフに画面を見せて景品ゲット。早い者勝ち！</p>
+            <p>縦・横・斜めがそろったらスタッフに画面を見せて景品ゲット。ビンゴが出なければ<strong>開いた穴の数</strong>で勝負！</p>
           </article>
         </div>
         <div class="mini-card reveal" aria-hidden="true"></div>
-        <p class="bingo-note reveal"><a class="btn ghost" href="bingo.html">ビンゴカードを見る（デモ）</a></p>
+        <p class="bingo-note reveal"><a class="btn ghost" href="bingo.html">ビンゴカードを作る →</a></p>
       </div>
     </section>
 
@@ -140,6 +141,7 @@
             <p>当日のお楽しみ</p>
           </div>
         </div>
+        <p class="tentative reveal" style="text-align:center;margin-top:20px">※ 最後までビンゴが出なかった場合は、開いた穴の数が多い順に景品をお渡しします（終了時に画面を見せて自己申告 → スタッフが確認）。</p>
       </div>
     </section>
 
@@ -201,15 +203,32 @@
           <p style="color:var(--muted)">フォームでは以下の項目をお伺いします。</p>
           <div class="fields">
             <span class="chip">お名前（ハンドルネーム）</span>
-            <span class="chip pink">私といえばこの曲</span>
+            <span class="chip pink">私といえばこの曲（最大<span data-cfg="songsPerPerson"></span>曲）</span>
             <span class="chip">アーティスト名</span>
             <span class="chip">ひとことメッセージ</span>
           </div>
+          <p style="color:var(--muted);font-size:13px;margin:-14px 0 24px">※ ハンドルネーム・曲・ひとことはこのサイトの参加者一覧に掲載されます。</p>
           <div>
             <a class="btn" data-form-link href="#"><span class="label">ENTRY FORM</span> ↗</a>
           </div>
           <div class="form-embed" id="form-embed" hidden></div>
         </div>
+      </div>
+    </section>
+
+    <!-- ENTRIES -->
+    <section id="entries">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2 class="en">ENTRIES</h2>
+          <span class="ja">参加者と「私といえばこの曲」</span>
+        </div>
+        <div class="entries-meta reveal">
+          <div><b id="entry-count">-</b><span>PLAYERS</span></div>
+          <div><b id="song-count">-</b><span>SONGS</span></div>
+        </div>
+        <div class="entries" id="entries-list"></div>
+        <p class="tentative" style="margin-top:16px">※ 申請内容は反映まで数分かかる場合があります。</p>
       </div>
     </section>
 
@@ -230,8 +249,20 @@
             <p>できる限りすべての曲をDJセットに組み込みますが、時間の都合や音源の入手状況によって流れない場合があります。ご了承ください。</p>
           </details>
           <details>
-            <summary><span>ビンゴカードはどうやって使いますか？</span></summary>
-            <p>当日、スマートフォンでこのサイトの「CARD」ページを開き、名前を入力するとカードが生成されます。紙のカードは配布しないので、スマホの充電をお忘れなく。</p>
+            <summary><span>ビンゴカードはどうやって作りますか？</span></summary>
+            <p>スマートフォンでこのサイトの「CARD」ページを開き、24マスに好きな曲を書き込んで「確定」してください。カードはそのスマホのブラウザに保存されるので、当日も同じ端末・同じブラウザで開いてください。紙のカードは配布しません。</p>
+          </details>
+          <details>
+            <summary><span>申請されていない曲を書いてもいいですか？</span></summary>
+            <p>OKです。ただしDJは基本的に申請曲を中心に流すので、参加者一覧の曲から選ぶのが有利です。</p>
+          </details>
+          <details>
+            <summary><span>確定したカードは変更できますか？</span></summary>
+            <p>イベント開始前なら「カードを作り直す」から変更できます。開始後は変更できません。</p>
+          </details>
+          <details>
+            <summary><span>ビンゴが出なかったらどうなりますか？</span></summary>
+            <p>最後までビンゴが出なかった場合は、開いた穴の数が多い順に景品をお渡しします。終了時にカード画面をスタッフに見せてください。</p>
           </details>
           <details>
             <summary><span>途中参加・途中退場はできますか？</span></summary>
@@ -255,6 +286,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
   <script src="js/config.js"></script>
+  <script src="js/entries.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

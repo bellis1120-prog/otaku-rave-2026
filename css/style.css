@@ -346,6 +346,51 @@ section { padding: clamp(80px, 12vw, 140px) 0; position: relative; }
 .bingo-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 24px; }
 .demo-banner { margin-bottom: 18px; padding: 12px 16px; border-radius: 10px; border: 1px dashed var(--yellow); color: var(--yellow); font-size: 13px; }
 
+.guide { margin-bottom: 18px; font-size: 14px; }
+.guide p + p { margin-top: 6px; color: var(--muted); }
+.text-input {
+  width: 100%; padding: 14px 18px; border-radius: 999px; margin-bottom: 16px;
+  background: rgba(14, 11, 28, 0.8); border: 1px solid var(--line); color: var(--text);
+  font: inherit; font-size: 16px;
+}
+.text-input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(25, 240, 255, 0.15); }
+.warn-text { color: var(--yellow); font-family: var(--font-ja); letter-spacing: 0; }
+.cell.empty { color: var(--muted); font-size: clamp(18px, 5vw, 26px); border-style: dashed; }
+.cell.filled { border-color: rgba(25, 240, 255, 0.45); }
+.cell.dup { border-color: var(--yellow); box-shadow: inset 0 0 0 1px var(--yellow); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.holes { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; padding: 18px 24px; }
+.holes-label { font-family: var(--font-en); font-size: 11px; letter-spacing: 0.3em; color: var(--muted); }
+.holes-num { font-family: var(--font-en); font-weight: 900; font-size: clamp(48px, 14vw, 72px); line-height: 1; color: var(--cyan); text-shadow: 0 0 18px var(--cyan); }
+.holes-num span { display: inline-block; }
+.holes-num small { font-size: 0.35em; color: var(--muted); text-shadow: none; }
+.holes-side { font-family: var(--font-en); font-size: 13px; letter-spacing: 0.1em; color: var(--muted); text-align: right; }
+.holes-side b { color: var(--yellow); font-size: 22px; margin-left: 6px; }
+
+.sheet { position: fixed; inset: 0; z-index: 80; background: rgba(7, 6, 13, 0.75); display: flex; align-items: flex-end; justify-content: center; padding: 16px; }
+.sheet-body { width: min(560px, 100%); margin-bottom: max(16px, env(safe-area-inset-bottom)); background: var(--bg-2); }
+.sheet-title { font-family: var(--font-en); letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 12px; }
+.suggest { display: flex; flex-wrap: wrap; gap: 8px; max-height: 30vh; overflow-y: auto; }
+.suggest .chip { background: transparent; color: var(--text); cursor: pointer; font: inherit; font-size: 13px; text-align: left; }
+.suggest .chip:hover { border-color: var(--cyan); }
+.sheet .bingo-actions { margin-top: 16px; }
+
+/* ---------- ENTRIES ---------- */
+.entries-meta { display: flex; flex-wrap: wrap; gap: 12px 32px; margin-bottom: 24px; font-family: var(--font-en); }
+.entries-meta b { font-size: 40px; color: var(--cyan); text-shadow: 0 0 14px var(--cyan); margin-right: 6px; }
+.entries-meta span { color: var(--muted); font-size: 12px; letter-spacing: 0.2em; }
+.entries { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.entry-card { padding: 22px; }
+.entry-card h3 { font-size: 17px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.entry-card h3::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--pink); box-shadow: 0 0 8px var(--pink); flex: none; }
+.entry-card ol { list-style: none; counter-reset: s; }
+.entry-card li { counter-increment: s; padding-left: 2em; position: relative; font-size: 14px; margin-bottom: 4px; }
+.entry-card li::before { content: counter(s, decimal-leading-zero); position: absolute; left: 0; font-family: var(--font-en); font-size: 11px; color: var(--cyan); top: 3px; }
+.entry-card li small { color: var(--muted); }
+.entry-card .msg { margin-top: 10px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
+.entries-empty { text-align: center; color: var(--muted); }
+
 .bingo-burst {
   position: fixed; inset: 0; z-index: 90; display: none; align-items: center; justify-content: center; flex-direction: column;
   background: rgba(7, 6, 13, 0.85); text-align: center; padding: 16px;

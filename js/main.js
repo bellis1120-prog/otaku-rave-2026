@@ -22,6 +22,7 @@
     zip: C.venue.zip,
     venueNote: C.venue.note,
     contact: C.contact.handle,
+    songsPerPerson: C.songsPerPerson,
   };
   document.querySelectorAll("[data-cfg]").forEach((el) => {
     const v = values[el.dataset.cfg];
@@ -57,6 +58,36 @@
     tl.innerHTML = C.schedule
       .map((s) => `<li class="reveal"><time>${s.time}</time><h3>${s.title}</h3><p>${s.note}</p></li>`)
       .join("");
+  }
+
+  /* ---------- 参加者一覧 ---------- */
+  const entriesList = document.getElementById("entries-list");
+  if (entriesList && window.loadEntries) {
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    window.loadEntries().then(({ ok, entries }) => {
+      document.getElementById("entry-count").textContent = entries.length;
+      document.getElementById("song-count").textContent = entries.reduce((n, e) => n + e.songs.length, 0);
+      if (!entries.length) {
+        entriesList.innerHTML = `<p class="panel entries-empty">${ok ? "まだ申請はありません。一番乗りを目指そう！" : "参加者一覧を読み込めませんでした。時間をおいて再読み込みしてください。"}</p>`;
+        return;
+      }
+      entriesList.innerHTML = entries
+        .map((e) => `<article class="entry-card panel">
+          <h3>${esc(e.name)}</h3>
+          <ol>${e.songs.map((s) => `<li>${esc(s.title)}${s.artist ? ` <small>/ ${esc(s.artist)}</small>` : ""}</li>`).join("")}</ol>
+          ${e.comment ? `<p class="msg">${esc(e.comment)}</p>` : ""}
+        </article>`)
+        .join("");
+      if (hasAnime) {
+        const io = new IntersectionObserver((list) => {
+          if (!list.some((x) => x.isIntersecting)) return;
+          io.disconnect();
+          anime({ targets: entriesList.children, opacity: [0, 1], translateY: [30, 0], delay: anime.stagger(60), duration: 800, easing: "easeOutExpo" });
+        });
+        [...entriesList.children].forEach((c) => (c.style.opacity = 0));
+        io.observe(entriesList);
+      }
+    });
   }
 
   /* ---------- メニュー ---------- */

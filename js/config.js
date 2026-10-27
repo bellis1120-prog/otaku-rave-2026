@@ -47,11 +47,20 @@ window.EVENT_CONFIG = {
     mapQuery: "Entertainment BAR Guild 大阪市浪速区日本橋5-12-5",
   },
 
+  // 1人あたりの申請曲数（フォームの設問数に合わせる）
+  songsPerPerson: 3,
+
   /*
-   * ビンゴ用の曲リスト
-   * Googleフォームで集まった曲をここに追加してください（24曲以上でカード生成が可能）。
+   * 申請一覧の読み込み元
+   * Googleフォームの回答スプレッドシートを「ファイル → 共有 → ウェブに公開 → CSV」で公開したURL。
+   * 例: https://docs.google.com/spreadsheets/d/e/XXXX/pub?gid=0&single=true&output=csv
+   * ※ 公開したシートの内容は誰でも見られます。メールアドレス等は収集しないでください。
+   */
+  sheetCsvUrl: "",
+
+  /*
+   * 手動で追加する曲（フォーム外で受け付けた分や、DJ側の補充曲など）
    * 例: { title: "曲名", artist: "アーティスト", by: "申請者のハンドルネーム" }
-   * 空の場合はサンプル曲でデモカードを表示します。
    */
   songs: [],
 };
