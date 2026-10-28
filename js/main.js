@@ -15,7 +15,6 @@
     fee: yen(C.fee),
     drink: yen(C.drink),
     total: yen(C.fee + C.drink),
-    capacity: C.capacity,
     deadline: C.deadline,
     venue: C.venue.name,
     address: C.venue.address,
@@ -50,7 +49,7 @@
 
   // 連絡先リンク
   document.querySelectorAll("[data-contact]").forEach((a) => {
-    a.textContent = `${C.contact.label} ${C.contact.handle}`;
+    a.textContent = [C.contact.label, C.contact.handle].filter(Boolean).join(" ");
     if (C.contact.url) a.href = C.contact.url;
   });
 

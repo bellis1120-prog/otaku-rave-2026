@@ -12,7 +12,7 @@ https://bellis1120-prog.github.io/otaku-rave-2026/
 表示内容はすべて `js/config.js` で管理しています。
 
 - `formUrl` / `formEmbedUrl` … Google フォームの共有 URL / 埋め込み URL
-- `capacity` / `deadline` / `contact` … 定員・締切・連絡先
+- `deadline` / `contact` … 申込締切・連絡先
 - `schedule` … タイムテーブル
 - `fee` / `drink` / `drinkCount` … 参加費・ドリンク代（合計）・ドリンク数
 - `songsPerPerson` … 1人あたりの申請曲数（現在 1 曲）

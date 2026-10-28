@@ -19,15 +19,14 @@ window.EVENT_CONFIG = {
   drinkCount: 2,
 
   // 申込関連
-  capacity: "TBD",
-  deadline: "TBD",
+  deadline: "12/31 12:00 ビンゴカード発行開始まで",
   // Googleフォームの共有URL（例: https://forms.gle/xxxx）。空ならボタンは「準備中」表示
   formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSez9gnzdN1AetE7DHhR1dTJZZaj1Sp6Gym5_qmbrjAwCBkUbQ/viewform",
   // Googleフォームの埋め込みURL（…/viewform?embedded=true）。空なら埋め込みは非表示
   formEmbedUrl: "https://docs.google.com/forms/d/e/1FAIpQLSez9gnzdN1AetE7DHhR1dTJZZaj1Sp6Gym5_qmbrjAwCBkUbQ/viewform?embedded=true",
 
   // 主催者連絡先
-  contact: { label: "X (旧Twitter)", handle: "@TBD", url: "" },
+  contact: { label: "", handle: "せいたろー、とらふぃる", url: "" },
 
   // 当日のタイムテーブル（仮）
   schedule: [
