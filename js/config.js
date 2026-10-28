@@ -33,7 +33,7 @@ window.EVENT_CONFIG = {
   schedule: [
     { time: "12:00", title: "OPEN / DJ START", note: "受付・ドリンクチケット受け取り。ビンゴカードを発行しよう" },
     { time: "12:15", title: "DJ TIME", note: "DJたちのプレイで年忘れ。ビンゴカードの発行はお早めに" },
-    { time: "16:00", title: "BINGO TIME", note: "みんなのリクエスト曲を30分間ランダムで再生。ビンゴ達成者はその場で景品受け取り" },
+    { time: "16:00", title: "BINGO TIME", note: "リクエスト曲を1番のみ、ランダムで15曲以上。ビンゴしたら叫んで、その場で景品受け取り" },
     { time: "16:30", title: "年忘れラストスパート", note: "締めの一曲で2026年を送り出そう" },
     { time: "17:00", title: "CLOSE", note: "良いお年を！" },
   ],
