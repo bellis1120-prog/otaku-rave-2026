@@ -410,3 +410,12 @@ section { padding: clamp(80px, 12vw, 140px) 0; position: relative; }
 .notice-box ul { margin: 0; padding-left: 1.2em; font-size: 14px; }
 .notice-box li + li { margin-top: 4px; }
 .footer-note { margin-bottom: 8px; }
+
+/* ブラウザ環境の注意（ビンゴカード） */
+.browser-warn { margin-bottom: 16px; padding: 16px 18px; border: 1px solid var(--yellow); border-radius: 12px; background: rgba(249, 248, 113, 0.08); font-size: 14px; }
+.browser-warn-title { font-family: var(--font-en); font-size: 12px; letter-spacing: 0.25em; color: var(--yellow); margin-bottom: 8px; }
+.browser-warn p + p { margin-top: 8px; }
+.browser-warn b { color: var(--yellow); }
+.browser-warn .btn { margin-top: 14px; }
+.storage-note { margin-bottom: 16px; font-size: 12px; color: var(--muted); }
+.storage-note b { color: var(--text); }

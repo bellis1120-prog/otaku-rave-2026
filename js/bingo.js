@@ -79,7 +79,9 @@
 
   $("issue").addEventListener("click", () => {
     if (!isOpen() || !pool || pool.length < 25 || !state.name) return;
-    if (!confirm(`「${state.name}」でカードを発行しますか？\n発行は1回のみで、やり直しはできません。`)) return;
+    const check = window.BROWSER_CHECK || {};
+    const warn = check.app ? `\n\n⚠ ${check.app} のアプリ内ブラウザで開いています。発行したカードは Safari / Chrome では表示されません。` : "";
+    if (!confirm(`「${state.name}」でカードを発行しますか？\n発行は1回のみで、やり直しはできません。${warn}`)) return;
     state.cells = pick25();
     state.issuedAt = new Date().toISOString();
     state.marks = Array(25).fill(false);
