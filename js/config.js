@@ -54,6 +54,9 @@ window.EVENT_CONFIG = {
   // ビンゴタイム（リクエスト曲をランダムで流す枠）
   bingoTime: "16:00 - 16:30",
 
+  // ビンゴカードの真ん中に必ず置く共通曲（申請曲と同じ曲でも重複しない）。null なら25マスすべてランダム
+  centerSong: { title: "stone cold", artist: "FictionJunction" },
+
   // ビンゴカードの発行開始時刻（申請曲からランダムに25曲を選んで発行）。空なら start と同じ
   cardOpenAt: "2026-12-31T12:00:00+09:00",
 

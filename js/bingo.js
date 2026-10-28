@@ -26,11 +26,17 @@
   const openAt = new Date(C.cardOpenAt || C.start);
   const isOpen = () => Date.now() >= openAt.getTime();
 
-  // 申請曲を曲名で重複排除してカードの元にする
+  // 真ん中のマスは全員共通の曲（config の centerSong）。残り24マスを申請曲からランダムに埋める
+  const CENTER = 12;
+  const center = C.centerSong && C.centerSong.title ? C.centerSong : null;
+  const randomCount = center ? 24 : 25;
+
+  // 申請曲を曲名で重複排除してカードの元にする（共通曲は除く）
   let pool = null;
   window.loadEntries().then(({ ok, entries }) => {
     const seen = new Set();
     pool = [];
+    if (center) seen.add(norm(center.title));
     entries.forEach((e) => e.songs.forEach((s) => {
       if (seen.has(norm(s.title))) return;
       seen.add(norm(s.title));
@@ -45,27 +51,31 @@
     crypto.getRandomValues(a);
     return a[0] % n;
   };
-  const pick25 = () => {
+  const pickCells = () => {
     const a = pool.slice();
     for (let i = a.length - 1; i > 0; i--) {
       const j = randInt(i + 1);
       [a[i], a[j]] = [a[j], a[i]];
     }
-    return a.slice(0, 25);
+    const cells = a.slice(0, randomCount);
+    if (center) cells.splice(CENTER, 0, { title: center.title, artist: center.artist || "" });
+    return cells;
   };
+  const enoughSongs = () => pool && pool.length >= randomCount;
+  const poolTotal = () => (pool ? pool.length + (center ? 1 : 0) : 0);
 
   const preview = $("preview-grid");
   preview.innerHTML = Array.from({ length: 25 }, () => `<div class="cell mystery-cell">?</div>`).join("");
 
   const updateIssuer = () => {
     const open = isOpen();
-    const enough = pool && pool.length >= 25;
-    $("pool-count").textContent = pool ? pool.length : "-";
+    const enough = enoughSongs();
+    $("pool-count").textContent = pool ? poolTotal() : "-";
     $("issue-state").textContent = open ? "発行受付中" : `発行は ${fmt(openAt)} から`;
     $("issue-form").hidden = !open;
     let msg = "";
     if (pool && pool.loadFailed) msg = "申請曲を読み込めませんでした。通信状況を確認して再読み込みしてください。";
-    else if (open && pool && !enough) msg = `曲が25曲に満たないため発行できません（現在 ${pool.length} 曲）。スタッフにお声がけください。`;
+    else if (open && pool && !enough) msg = `曲が25曲に満たないため発行できません（現在 ${poolTotal()} 曲）。スタッフにお声がけください。`;
     $("issue-msg").textContent = msg;
     $("issue-msg").hidden = !msg;
     $("issue").disabled = !(open && enough && state.name);
@@ -78,11 +88,11 @@
   });
 
   $("issue").addEventListener("click", () => {
-    if (!isOpen() || !pool || pool.length < 25 || !state.name) return;
+    if (!isOpen() || !enoughSongs() || !state.name) return;
     const check = window.BROWSER_CHECK || {};
     const warn = check.app ? `\n\n⚠ ${check.app} のアプリ内ブラウザで開いています。発行したカードは Safari / Chrome では表示されません。` : "";
     if (!confirm(`「${state.name}」でカードを発行しますか？\n発行は1回のみで、やり直しはできません。${warn}`)) return;
-    state.cells = pick25();
+    state.cells = pickCells();
     state.issuedAt = new Date().toISOString();
     state.marks = Array(25).fill(false);
     state.bingos = 0;
@@ -115,7 +125,7 @@
     const d = new Date(state.issuedAt);
     $("issued-at").textContent = isNaN(d) ? "" : `発行 ${fmt(d)}`;
     grid.innerHTML = state.cells
-      .map((s, i) => `<button class="cell${state.marks[i] ? " on" : ""}" data-i="${i}" aria-pressed="${state.marks[i]}"><span class="t">${escapeHtml(s.title)}</span>${s.artist ? `<span class="a">${escapeHtml(s.artist)}</span>` : ""}</button>`)
+      .map((s, i) => `<button class="cell${i === CENTER && center ? " center" : ""}${state.marks[i] ? " on" : ""}" data-i="${i}" aria-pressed="${state.marks[i]}"><span class="t">${escapeHtml(s.title)}</span>${s.artist ? `<span class="a">${escapeHtml(s.artist)}</span>` : ""}</button>`)
       .join("");
     updateLines(false);
     if (intro && animeOk) {
