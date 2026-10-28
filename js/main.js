@@ -24,6 +24,7 @@
     contact: C.contact.handle,
     songsPerPerson: C.songsPerPerson,
     drinkCount: C.drinkCount,
+    bingoTime: C.bingoTime,
   };
   document.querySelectorAll("[data-cfg]").forEach((el) => {
     const v = values[el.dataset.cfg];
