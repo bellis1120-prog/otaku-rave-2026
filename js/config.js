@@ -22,9 +22,9 @@ window.EVENT_CONFIG = {
   capacity: "TBD",
   deadline: "TBD",
   // Googleフォームの共有URL（例: https://forms.gle/xxxx）。空ならボタンは「準備中」表示
-  formUrl: "",
+  formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSez9gnzdN1AetE7DHhR1dTJZZaj1Sp6Gym5_qmbrjAwCBkUbQ/viewform",
   // Googleフォームの埋め込みURL（…/viewform?embedded=true）。空なら埋め込みは非表示
-  formEmbedUrl: "",
+  formEmbedUrl: "https://docs.google.com/forms/d/e/1FAIpQLSez9gnzdN1AetE7DHhR1dTJZZaj1Sp6Gym5_qmbrjAwCBkUbQ/viewform?embedded=true",
 
   // 主催者連絡先
   contact: { label: "X (旧Twitter)", handle: "@TBD", url: "" },
@@ -63,7 +63,7 @@ window.EVENT_CONFIG = {
    * 例: https://docs.google.com/spreadsheets/d/e/XXXX/pub?gid=0&single=true&output=csv
    * ※ 公開したシートの内容は誰でも見られます。メールアドレス等は収集しないでください。
    */
-  sheetCsvUrl: "",
+  sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8HOG4gh4-jovrnEGE4Hlx-d23UDOrJw7fONWpFoVwVdeHon-GNw0yoha15-GQ4HGkLr0NmkL--MJF/pub?gid=1688804499&single=true&output=csv",
 
   /*
    * 手動で追加する曲（フォーム外で受け付けた分や、25曲に満たない場合の補充曲など）
