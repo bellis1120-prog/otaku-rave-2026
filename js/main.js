@@ -23,6 +23,7 @@
     venueNote: C.venue.note,
     contact: C.contact.handle,
     songsPerPerson: C.songsPerPerson,
+    drinkCount: C.drinkCount,
   };
   document.querySelectorAll("[data-cfg]").forEach((el) => {
     const v = values[el.dataset.cfg];
@@ -250,12 +251,11 @@
   if (mini) {
     mini.innerHTML = "<span></span>".repeat(25);
     const cells = [...mini.children];
-    cells[12].classList.add("hit");
     if (hasAnime) {
-      const lines = [[0, 6, 12, 18, 24], [10, 11, 12, 13, 14], [2, 7, 12, 17, 22], [4, 8, 12, 16, 20]];
+      const lines = [[0, 6, 12, 18, 24], [5, 6, 7, 8, 9], [3, 8, 13, 18, 23], [4, 8, 12, 16, 20], [20, 21, 22, 23, 24]];
       let i = 0;
       const play = () => {
-        cells.forEach((c, idx) => idx !== 12 && c.classList.remove("hit"));
+        cells.forEach((c) => c.classList.remove("hit"));
         const line = lines[i++ % lines.length];
         anime({
           targets: line.map((n) => cells[n]),

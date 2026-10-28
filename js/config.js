@@ -14,8 +14,9 @@ window.EVENT_CONFIG = {
   timeLabel: "12:00 - 17:00",
 
   // 料金
-  fee: 2500,
-  drink: 500,
+  fee: 2800,
+  drink: 1200,
+  drinkCount: 2,
 
   // 申込関連
   capacity: "TBD",
@@ -30,7 +31,7 @@ window.EVENT_CONFIG = {
 
   // 当日のタイムテーブル（仮）
   schedule: [
-    { time: "12:00", title: "OPEN / DJ START", note: "受付・1ドリンク交換。ビンゴカードを準備しよう" },
+    { time: "12:00", title: "OPEN / DJ START", note: "受付・ドリンクチケット受け取り。ビンゴカードを発行しよう" },
     { time: "12:15", title: "DJ TIME & BINGO", note: "みんなの「私といえばこの曲」が次々と流れます" },
     { time: "16:00", title: "BINGO 結果発表", note: "ビンゴ達成者は景品受け取りへ" },
     { time: "16:30", title: "年忘れラストスパート", note: "締めの一曲で2026年を送り出そう" },
@@ -48,7 +49,10 @@ window.EVENT_CONFIG = {
   },
 
   // 1人あたりの申請曲数（フォームの設問数に合わせる）
-  songsPerPerson: 3,
+  songsPerPerson: 1,
+
+  // ビンゴカードの発行開始時刻（申請曲からランダムに25曲を選んで発行）。空なら start と同じ
+  cardOpenAt: "2026-12-31T12:00:00+09:00",
 
   /*
    * 申請一覧の読み込み元
@@ -59,7 +63,7 @@ window.EVENT_CONFIG = {
   sheetCsvUrl: "",
 
   /*
-   * 手動で追加する曲（フォーム外で受け付けた分や、DJ側の補充曲など）
+   * 手動で追加する曲（フォーム外で受け付けた分や、25曲に満たない場合のDJ側の補充曲など）
    * 例: { title: "曲名", artist: "アーティスト", by: "申請者のハンドルネーム" }
    */
   songs: [],

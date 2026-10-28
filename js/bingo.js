@@ -1,9 +1,7 @@
 (() => {
   const C = window.EVENT_CONFIG;
-  const STORE_KEY = "otaku-rave-card-v2";
-  const FREE = 12;
+  const STORE_KEY = "otaku-rave-card-v3";
   const animeOk = typeof window.anime === "function" && !matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const eventStarted = () => Date.now() >= new Date(C.start).getTime();
 
   const LINES = [
     [0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14], [15, 16, 17, 18, 19], [20, 21, 22, 23, 24],
@@ -14,154 +12,118 @@
   const $ = (id) => document.getElementById(id);
   const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const norm = (s) => s.replace(/\s+/g, "").toLowerCase();
+  const fmt = (d) => `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
 
   /* ---------- 状態 ---------- */
-  const blank = () => ({ name: "", cells: Array(25).fill(""), locked: false, lockedAt: null, marks: Array(25).fill(false), bingos: 0 });
+  const blank = () => ({ name: "", cells: null, issuedAt: null, marks: Array(25).fill(false), bingos: 0 });
   let state;
   try { state = { ...blank(), ...JSON.parse(localStorage.getItem(STORE_KEY)) }; } catch { state = blank(); }
-  state.marks[FREE] = true;
   const save = () => {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch { /* 保存できなくても動作は継続 */ }
   };
 
-  /* ---------- 申請曲を候補として読み込み ---------- */
-  let suggestions = [];
-  window.loadEntries().then(({ entries }) => {
+  /* ---------- 発行モード ---------- */
+  const openAt = new Date(C.cardOpenAt || C.start);
+  const isOpen = () => Date.now() >= openAt.getTime();
+
+  // 申請曲を曲名で重複排除してカードの元にする
+  let pool = null;
+  window.loadEntries().then(({ ok, entries }) => {
     const seen = new Set();
+    pool = [];
     entries.forEach((e) => e.songs.forEach((s) => {
-      const label = s.artist ? `${s.title} / ${s.artist}` : s.title;
       if (seen.has(norm(s.title))) return;
       seen.add(norm(s.title));
-      suggestions.push({ title: s.title, label });
+      pool.push({ title: s.title, artist: s.artist });
     }));
-    $("song-list").innerHTML = suggestions.map((s) => `<option value="${escapeHtml(s.title)}">${escapeHtml(s.label)}</option>`).join("");
+    pool.loadFailed = !ok;
+    updateIssuer();
   });
 
-  /* ---------- 作成モード ---------- */
-  const editGrid = $("edit-grid");
-
-  const renderEditor = () => {
-    $("editor").hidden = false;
-    $("player-view").hidden = true;
-    $("player").value = state.name;
-    const counts = {};
-    state.cells.forEach((t) => { if (t) counts[norm(t)] = (counts[norm(t)] || 0) + 1; });
-    editGrid.innerHTML = state.cells
-      .map((t, i) => {
-        if (i === FREE) return `<div class="cell free on">FREE</div>`;
-        const dup = t && counts[norm(t)] > 1;
-        return t
-          ? `<button class="cell filled${dup ? " dup" : ""}" data-i="${i}"><span class="t">${escapeHtml(t)}</span></button>`
-          : `<button class="cell empty" data-i="${i}" aria-label="マス${i + 1}に曲を入力">＋</button>`;
-      })
-      .join("");
-    $("filled").textContent = state.cells.filter((t, i) => i !== FREE && t).length;
-    $("dup-warn").hidden = !hasDuplicate();
-    updateLockButton();
+  const randInt = (n) => {
+    const a = new Uint32Array(1);
+    crypto.getRandomValues(a);
+    return a[0] % n;
+  };
+  const pick25 = () => {
+    const a = pool.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = randInt(i + 1);
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a.slice(0, 25);
   };
 
-  // 同じ曲で複数の穴が開かないよう、重複があるカードは確定させない
-  const hasDuplicate = () => {
-    const titles = state.cells.filter((t, i) => i !== FREE && t).map(norm);
-    return new Set(titles).size !== titles.length;
-  };
-  const updateLockButton = () => {
-    const filled = state.cells.filter((t, i) => i !== FREE && t).length;
-    $("lock").disabled = filled < 24 || !state.name || hasDuplicate();
+  const preview = $("preview-grid");
+  preview.innerHTML = Array.from({ length: 25 }, () => `<div class="cell mystery-cell">?</div>`).join("");
+
+  const updateIssuer = () => {
+    const open = isOpen();
+    const enough = pool && pool.length >= 25;
+    $("pool-count").textContent = pool ? pool.length : "-";
+    $("issue-state").textContent = open ? "発行受付中" : `発行は ${fmt(openAt)} から`;
+    $("issue-form").hidden = !open;
+    let msg = "";
+    if (pool && pool.loadFailed) msg = "申請曲を読み込めませんでした。通信状況を確認して再読み込みしてください。";
+    else if (open && pool && !enough) msg = `曲が25曲に満たないため発行できません（現在 ${pool.length} 曲）。スタッフにお声がけください。`;
+    $("issue-msg").textContent = msg;
+    $("issue-msg").hidden = !msg;
+    $("issue").disabled = !(open && enough && state.name);
   };
 
   $("player").addEventListener("input", (e) => {
     state.name = e.target.value.trim();
     save();
-    updateLockButton();
+    updateIssuer();
   });
 
-  /* ---------- 曲入力シート ---------- */
-  let editing = -1;
-  const openSheet = (i) => {
-    editing = i;
-    const col = "BINGO"[i % 5];
-    $("sheet-title").textContent = `${col} 列 ${Math.floor(i / 5) + 1} 段目`;
-    $("song-input").value = state.cells[i];
-    renderSuggest();
-    $("sheet").hidden = false;
-    if (animeOk) anime({ targets: ".sheet-body", translateY: [60, 0], opacity: [0, 1], duration: 450, easing: "easeOutExpo" });
-    setTimeout(() => $("song-input").focus(), 50);
-  };
-  const closeSheet = () => { $("sheet").hidden = true; editing = -1; };
-  const commit = (value) => {
-    state.cells[editing] = value.trim();
-    save();
-    closeSheet();
-    renderEditor();
-  };
-
-  // 入力中の文字で申請曲を絞り込み（カードで使用済みの曲は除外）
-  const renderSuggest = () => {
-    const q = norm($("song-input").value);
-    const used = new Set(state.cells.filter((t, i) => t && i !== editing).map(norm));
-    const list = suggestions.filter((s) => !used.has(norm(s.title)) && (!q || norm(s.label).includes(q))).slice(0, 8);
-    $("suggest").innerHTML = list.map((s) => `<button type="button" class="chip" data-title="${escapeHtml(s.title)}">${escapeHtml(s.label)}</button>`).join("");
-  };
-  $("song-input").addEventListener("input", renderSuggest);
-  $("song-input").addEventListener("keydown", (e) => { if (e.key === "Enter") commit($("song-input").value); });
-  $("suggest").addEventListener("click", (e) => {
-    const b = e.target.closest("[data-title]");
-    if (b) commit(b.dataset.title);
-  });
-  $("sheet-save").addEventListener("click", () => commit($("song-input").value));
-  $("sheet-clear").addEventListener("click", () => commit(""));
-  $("sheet-cancel").addEventListener("click", closeSheet);
-  $("sheet").addEventListener("click", (e) => { if (e.target.id === "sheet") closeSheet(); });
-
-  editGrid.addEventListener("click", (e) => {
-    const cell = e.target.closest("button.cell");
-    if (cell) openSheet(+cell.dataset.i);
-  });
-
-  $("clear-all").addEventListener("click", () => {
-    if (!confirm("入力したマスをすべて消しますか？")) return;
-    state.cells = Array(25).fill("");
-    save();
-    renderEditor();
-  });
-
-  $("lock").addEventListener("click", () => {
-    if (!confirm("カードを確定しますか？\n確定後はマスの曲を書き換えられません。")) return;
-    state.locked = true;
-    state.lockedAt = new Date().toISOString();
+  $("issue").addEventListener("click", () => {
+    if (!isOpen() || !pool || pool.length < 25 || !state.name) return;
+    if (!confirm(`「${state.name}」でカードを発行しますか？\n発行は1回のみで、やり直しはできません。`)) return;
+    state.cells = pick25();
+    state.issuedAt = new Date().toISOString();
     state.marks = Array(25).fill(false);
-    state.marks[FREE] = true;
     state.bingos = 0;
     save();
     renderPlay(true);
   });
 
+  const renderIssuer = () => {
+    $("issuer").hidden = false;
+    $("player-view").hidden = true;
+    $("player").value = state.name;
+    updateIssuer();
+    // 発行開始時刻をまたいだら自動で切り替え
+    if (!isOpen()) {
+      const timer = setInterval(() => { if (isOpen()) { clearInterval(timer); updateIssuer(); } }, 10000);
+    }
+    if (animeOk) {
+      anime({ targets: preview.children, opacity: [0.25, 1], scale: [0.9, 1], delay: anime.stagger(60, { grid: [5, 5], from: "center" }), direction: "alternate", loop: true, duration: 900, easing: "easeInOutSine" });
+    }
+  };
+
   /* ---------- プレイモード ---------- */
   const grid = $("grid");
 
   const renderPlay = (intro) => {
-    $("editor").hidden = true;
+    if (intro && animeOk) anime.remove(preview.children);
+    $("issuer").hidden = true;
     $("player-view").hidden = false;
     $("player-label").textContent = `PLAYER: ${state.name}`;
-    const d = new Date(state.lockedAt);
-    $("locked-at").textContent = isNaN(d) ? "" : `確定 ${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-    $("remake").hidden = eventStarted();
+    const d = new Date(state.issuedAt);
+    $("issued-at").textContent = isNaN(d) ? "" : `発行 ${fmt(d)}`;
     grid.innerHTML = state.cells
-      .map((t, i) => {
-        if (i === FREE) return `<div class="cell free on">FREE</div>`;
-        return `<button class="cell${state.marks[i] ? " on" : ""}" data-i="${i}" aria-pressed="${state.marks[i]}"><span class="t">${escapeHtml(t)}</span></button>`;
-      })
+      .map((s, i) => `<button class="cell${state.marks[i] ? " on" : ""}" data-i="${i}" aria-pressed="${state.marks[i]}"><span class="t">${escapeHtml(s.title)}</span>${s.artist ? `<span class="a">${escapeHtml(s.artist)}</span>` : ""}</button>`)
       .join("");
     updateLines(false);
     if (intro && animeOk) {
       anime({
         targets: grid.children,
         scale: [0, 1],
-        rotate: [anime.stagger([-20, 20]), 0],
+        rotateY: [180, 0],
         opacity: [0, 1],
-        delay: anime.stagger(40, { grid: [5, 5], from: "center" }),
-        duration: 700,
+        delay: anime.stagger(60, { grid: [5, 5], from: "center" }),
+        duration: 800,
         easing: "easeOutBack",
       });
     }
@@ -176,7 +138,7 @@
       if (n === 5) { bingo++; line.forEach((i) => cells[i].classList.add("line")); }
       else if (n === 4) reach++;
     });
-    const holes = state.marks.filter((m, i) => m && i !== FREE).length;
+    const holes = state.marks.filter(Boolean).length;
     const holesEl = $("holes");
     if (celebrate && animeOk && +holesEl.textContent !== holes) {
       anime({ targets: holesEl, scale: [1.4, 1], duration: 500, easing: "easeOutElastic(1, .6)" });
@@ -203,19 +165,9 @@
   $("clear").addEventListener("click", () => {
     if (!confirm("マークをすべてリセットしますか？")) return;
     state.marks = Array(25).fill(false);
-    state.marks[FREE] = true;
     state.bingos = 0;
     save();
     renderPlay(false);
-  });
-
-  // 作り直しはイベント開始前のみ
-  $("remake").addEventListener("click", () => {
-    if (eventStarted()) return;
-    if (!confirm("カードの確定を取り消して作り直しますか？\n書き込んだ曲はそのまま残ります。")) return;
-    state.locked = false;
-    save();
-    renderEditor();
   });
 
   /* ---------- BINGO 演出 ---------- */
@@ -246,6 +198,6 @@
   };
   $("burst-close").addEventListener("click", () => $("burst").classList.remove("show"));
 
-  if (state.locked) renderPlay(false);
-  else renderEditor();
+  if (Array.isArray(state.cells) && state.cells.length === 25) renderPlay(false);
+  else renderIssuer();
 })();

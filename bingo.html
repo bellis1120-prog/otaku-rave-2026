@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BINGO CARD｜OTAKU YEAR-END RAVE 2026</title>
-  <meta name="description" content="推し曲ビンゴのWebビンゴカード。好きな曲を書き込んで自分だけのカードを作ろう">
+  <meta name="description" content="推し曲ビンゴのWebビンゴカード。当日、みんなの申請曲からランダムにカードを発行">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
@@ -41,22 +41,24 @@
     <section style="padding-top:20px">
       <div class="container bingo-wrap">
 
-        <!-- 作成モード -->
-        <div id="editor">
+        <!-- 発行モード -->
+        <div id="issuer">
           <div class="panel guide">
-            <p><b>自分だけのビンゴカードを作ろう！</b></p>
-            <p>マスをタップして、当日流れそうな曲を自由に書き込んでください。<a href="index.html#entries">みんなの申請曲</a>から選ぶのがおすすめです。全部埋めたら「カードを確定」。確定後は書き換えできません。</p>
+            <p><b>みんなの申請曲から、あなただけのカードを発行！</b></p>
+            <p>集まった曲の中からランダムに25曲を選んで、5×5のビンゴカードを作ります。発行は1人1回、やり直しはできません。</p>
           </div>
-          <input id="player" class="text-input" type="text" maxlength="24" placeholder="ハンドルネーム" autocomplete="nickname">
           <div class="bingo-status">
-            <span>入力済み <b id="filled">0</b> / 24</span>
-            <span id="dup-warn" class="warn-text" hidden>同じ曲が複数のマスにあります（重複があると確定できません）</span>
+            <span id="issue-state"></span>
+            <span>POOL <b id="pool-count">-</b> 曲</span>
           </div>
+          <div id="issue-form" hidden>
+            <input id="player" class="text-input" type="text" maxlength="24" placeholder="ハンドルネーム" autocomplete="nickname">
+          </div>
+          <p id="issue-msg" class="warn-text" style="font-size:13px;margin-bottom:14px" hidden></p>
           <div class="bingo-head" aria-hidden="true"><span>B</span><span>I</span><span>N</span><span>G</span><span>O</span></div>
-          <div class="bingo-grid" id="edit-grid"></div>
+          <div class="bingo-grid" id="preview-grid" aria-hidden="true"></div>
           <div class="bingo-actions">
-            <button class="btn" type="button" id="lock" disabled>カードを確定</button>
-            <button class="btn ghost" type="button" id="clear-all">すべて消す</button>
+            <button class="btn" type="button" id="issue" disabled>カードを発行</button>
           </div>
         </div>
 
@@ -65,19 +67,18 @@
           <div class="holes panel glow">
             <div>
               <div class="holes-label">OPEN HOLES</div>
-              <div class="holes-num"><span id="holes">0</span><small>/24</small></div>
+              <div class="holes-num"><span id="holes">0</span><small>/25</small></div>
             </div>
             <div class="holes-side">
               <div>REACH <b id="reach">0</b></div>
               <div>BINGO <b id="bingo">0</b></div>
             </div>
           </div>
-          <p class="bingo-status"><span id="player-label"></span><span id="locked-at"></span></p>
+          <p class="bingo-status"><span id="player-label"></span><span id="issued-at"></span></p>
           <div class="bingo-head" aria-hidden="true"><span>B</span><span>I</span><span>N</span><span>G</span><span>O</span></div>
           <div class="bingo-grid" id="grid"></div>
           <div class="bingo-actions">
             <button class="btn ghost" type="button" id="clear">マークをリセット</button>
-            <button class="btn ghost" type="button" id="remake">カードを作り直す</button>
           </div>
           <p class="tentative" style="text-align:center;margin-top:18px">
             ※ 曲が流れたらマスをタップ。ビンゴになったらこの画面をスタッフに見せてください。<br>
@@ -87,21 +88,6 @@
       </div>
     </section>
   </main>
-
-  <!-- 曲入力シート -->
-  <div class="sheet" id="sheet" hidden>
-    <div class="sheet-body panel glow" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-      <p class="sheet-title" id="sheet-title"></p>
-      <input id="song-input" class="text-input" type="text" maxlength="60" placeholder="曲名を入力" list="song-list" autocomplete="off">
-      <datalist id="song-list"></datalist>
-      <div class="suggest" id="suggest"></div>
-      <div class="bingo-actions">
-        <button class="btn" type="button" id="sheet-save">OK</button>
-        <button class="btn ghost" type="button" id="sheet-clear">このマスを消す</button>
-        <button class="btn ghost" type="button" id="sheet-cancel">キャンセル</button>
-      </div>
-    </div>
-  </div>
 
   <div class="bingo-burst" id="burst" role="dialog" aria-live="assertive">
     <h2 id="burst-title"></h2>
