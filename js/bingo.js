@@ -1,6 +1,6 @@
 (() => {
   const C = window.EVENT_CONFIG;
-  const STORE_KEY = "otaku-rave-card-v3";
+  const STORE_KEY = "uchikai-card-v3";
   const animeOk = typeof window.anime === "function" && !matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const LINES = [

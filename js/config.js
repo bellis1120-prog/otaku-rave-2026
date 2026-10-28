@@ -3,7 +3,7 @@
  * サイト上の表記はすべてここから読み込まれます。TBD の項目は決まり次第書き換えてください。
  */
 window.EVENT_CONFIG = {
-  name: "OTAKU YEAR-END RAVE 2026",
+  name: "UCHIKAI 2026",
   subtitle: "推し曲ビンゴ忘年会",
   tagline: "あなたの「私といえばこの曲」で、今年を締めくくろう。",
 

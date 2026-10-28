@@ -1,4 +1,4 @@
-# OTAKU YEAR-END RAVE 2026 サイト
+# UCHIKAI 2026 サイト
 
 静的サイト（HTML / CSS / JS + anime.js）。GitHub Pages で公開しています。
 https://bellis1120-prog.github.io/otaku-rave-2026/

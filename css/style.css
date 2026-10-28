@@ -56,6 +56,10 @@ img { max-width: 100%; display: block; }
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
   display: flex; align-items: center; justify-content: space-between;
   padding: 14px clamp(16px, 4vw, 40px);
+}
+/* backdrop-filter をヘッダー本体に付けると、固定配置のスマホメニューがヘッダー内に閉じ込められるため疑似要素に分離 */
+.site-header::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
   background: linear-gradient(to bottom, rgba(7, 6, 13, 0.9), rgba(7, 6, 13, 0));
   backdrop-filter: blur(6px);
 }
@@ -81,11 +85,12 @@ img { max-width: 100%; display: block; }
 @media (max-width: 760px) {
   .nav-toggle { display: block; }
   .nav {
-    position: fixed; inset: 0; flex-direction: column; align-items: center; justify-content: center;
-    gap: 30px; background: rgba(7, 6, 13, 0.96);
+    position: fixed; inset: 0; height: 100dvh; flex-direction: column; align-items: center; justify-content: center;
+    gap: 30px; background: rgba(7, 6, 13, 0.97); backdrop-filter: blur(10px);
     opacity: 0; pointer-events: none; transition: opacity 0.3s;
   }
-  .nav a { font-size: 18px; }
+  .nav a { font-size: 20px; color: var(--text); }
+  body.menu-open { overflow: hidden; }
   body.menu-open .nav { opacity: 1; pointer-events: auto; }
   body.menu-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   body.menu-open .nav-toggle span:nth-child(2) { opacity: 0; }
