@@ -396,3 +396,12 @@ section { padding: clamp(80px, 12vw, 140px) 0; position: relative; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal { opacity: 1; }
 }
+
+/* 招待制・非営利の表記 */
+.invite-badge { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 22px; padding: 8px 16px; border: 1px solid var(--yellow); border-radius: 999px; font-size: 13px; color: var(--text); background: rgba(249, 248, 113, 0.06); }
+.invite-badge b { font-family: var(--font-en); letter-spacing: 0.2em; color: var(--yellow); text-shadow: 0 0 10px rgba(249, 248, 113, 0.6); }
+.notice-box { margin-top: 22px; padding: 16px 20px; border: 1px dashed var(--yellow); border-radius: 12px; background: rgba(249, 248, 113, 0.04); }
+.notice-title { font-family: var(--font-en); font-size: 12px; letter-spacing: 0.25em; color: var(--yellow); margin-bottom: 8px; }
+.notice-box ul { margin: 0; padding-left: 1.2em; font-size: 14px; }
+.notice-box li + li { margin-top: 4px; }
+.footer-note { margin-bottom: 8px; }
