@@ -516,3 +516,7 @@ section { padding: clamp(80px, 12vw, 140px) 0; position: relative; }
 .cutin img.cutin-media { object-fit: contain; object-position: right bottom; opacity: 1; }
 .cutin.has-img { align-items: flex-start; text-align: left; padding-right: 42%; }
 .cutin.has-img img.cutin-media { left: auto; width: 45%; }
+.hl-body { position: relative; overflow: hidden; }
+.hl-img { position: absolute; right: -10px; bottom: 0; width: 46%; pointer-events: none; opacity: 0.95; }
+.hl-body .dl { position: relative; max-width: 62%; }
+.hl-body .bingo-actions { position: relative; z-index: 1; justify-content: flex-start; }

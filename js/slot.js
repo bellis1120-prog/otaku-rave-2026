@@ -379,6 +379,7 @@
     $("hl-games").textContent = S.bonus[b.type].games;
     $("hl-won").textContent = b.won;
     $("hl-trigger").textContent = b.trigger.length ? b.trigger.join(" → ") : "完全告知なし（いきなり）";
+    if (S.highlightImg) { $("hl-img").src = S.highlightImg; $("hl-img").hidden = false; }
     $("highlight").hidden = false;
     if (animeOk) anime({ targets: "#highlight .hl-body", scale: [0.8, 1], opacity: [0, 1], duration: 500, easing: "easeOutBack" });
     await new Promise((r) => ($("hl-close").onclick = r));

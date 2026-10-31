@@ -23,7 +23,7 @@ window.SLOT_CONFIG = {
     drink:    { name: "ドリンク", short: "🍺", color: "#ffb347", img: null, pay: 4 },
     replay:   { name: "リプレイ", short: "REPLAY", color: "#3ddc97", img: null },
     yuda:     { name: "ゆだ", short: "ゆだ", color: "#ff7a59", img: null },
-    udon:     { name: "うどん", short: "うどん", color: "#e8e3c9", img: null },
+    udon:     { name: "うどん", short: "うどん", color: "#e8e3c9", img: "assets/slot/udon.png" },
     kairo:    { name: "かいろ", short: "かいろ", color: "#8b5cff", img: null },
     takuasu:  { name: "たくあす", short: "たくあす", color: "#6fd3ff", img: "assets/slot/takuasu.png" },
   },
@@ -71,9 +71,12 @@ window.SLOT_CONFIG = {
     yancha:       { who: "ヤンチャグッピー", text: "……しゃあねぇな。戻ってやるよ。", video: null, image: null },
     scream:       { who: "みつぼん", text: "うおおおおおおおおおお！！！！", video: null, image: "assets/slot/mitsubon-scream.png" },
     reg:          { who: "みつぼん", text: "よっしゃああああ！", video: null, image: "assets/slot/mitsubon-scream.png" },
-    highlight:    { who: "うどん", text: "今の、ちゃんと撮っといたよ。", video: null, image: null },
+    highlight:    { who: "うどん", text: "今の、ちゃんと撮っといたよ。", video: null, image: "assets/slot/udon-thumb.png" },
     ceiling:      { who: "たくあす", text: "……フッ。ゲージ満タン、次は確定ですぞ", video: null, image: "assets/slot/takuasu.png" },
   },
+
+  // ボーナス後の「うどん編集ハイライト」に添える画像（null なら文字だけ）
+  highlightImg: "assets/slot/udon-thumb.png",
 
   // たくあすの実況アイコン（null なら名前だけ表示）
   naviImg: "assets/slot/takuasu-face.png",
