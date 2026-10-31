@@ -197,10 +197,12 @@
   const cutin = async (key, { big = false, ms = 1400 } = {}) => {
     const c = S.cutins[key];
     const box = $("cutin");
+    // image は配列でも可（出るたびにランダムで1枚）
+    const image = Array.isArray(c.image) ? pick(c.image) : c.image;
     let media = "";
     if (c.video) media = `<video class="cutin-media" src="${escapeHtml(c.video)}" autoplay muted playsinline></video>`;
-    else if (c.image) media = `<img class="cutin-media" src="${escapeHtml(c.image)}" alt="">`;
-    box.className = `cutin${big ? " big" : ""}${!c.video && c.image ? " has-img" : ""}`;
+    else if (image) media = `<img class="cutin-media" src="${escapeHtml(image)}" alt="">`;
+    box.className = `cutin${big ? " big" : ""}${!c.video && image ? " has-img" : ""}`;
     box.innerHTML = `${media}<div class="cutin-who">${escapeHtml(c.who)}</div><div class="cutin-text">${escapeHtml(c.text)}</div>`;
     box.hidden = false;
     if (animeOk) {
