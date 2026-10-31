@@ -25,7 +25,7 @@ window.SLOT_CONFIG = {
     yuda:     { name: "ゆだ", short: "ゆだ", color: "#ff7a59", img: null },
     udon:     { name: "うどん", short: "うどん", color: "#e8e3c9", img: null },
     kairo:    { name: "かいろ", short: "かいろ", color: "#8b5cff", img: null },
-    takuasu:  { name: "たくあす", short: "たくあす", color: "#6fd3ff", img: null },
+    takuasu:  { name: "たくあす", short: "たくあす", color: "#6fd3ff", img: "assets/slot/takuasu.png" },
   },
 
   // リール配列（上から順に並ぶ。各リール21コマ）
@@ -72,7 +72,11 @@ window.SLOT_CONFIG = {
     scream:       { who: "みつぼん", text: "うおおおおおおおおおお！！！！", video: null, image: null },
     reg:          { who: "みつぼん", text: "よっしゃああああ！", video: null, image: null },
     highlight:    { who: "うどん", text: "今の、ちゃんと撮っといたよ。", video: null, image: null },
+    ceiling:      { who: "たくあす", text: "……フッ。ゲージ満タン、次は確定ですぞ", video: null, image: "assets/slot/takuasu.png" },
   },
+
+  // たくあすの実況アイコン（null なら名前だけ表示）
+  naviImg: "assets/slot/takuasu-face.png",
 
   // たくあすの実況（場面ごとにランダムで1つ）
   navi: {

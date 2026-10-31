@@ -510,3 +510,9 @@ section { padding: clamp(80px, 12vw, 140px) 0; position: relative; }
 .hl-body { width: min(420px, 100%); background: var(--bg-2); }
 .hl-head { font-size: 12px; letter-spacing: 0.2em; color: #ff4b4b; }
 .hl-title { font-family: var(--font-en); font-weight: 900; font-size: 28px; color: var(--yellow); margin: 4px 0 14px; }
+.sym.img img { border-radius: 10px; border: 2px solid var(--c); background: color-mix(in srgb, var(--c) 18%, #0e0b1c); box-shadow: 0 0 10px color-mix(in srgb, var(--c) 50%, transparent); }
+.navi-who { display: inline-flex; align-items: center; gap: 6px; }
+.navi-who img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; background: #0e0b1c; margin-left: -6px; }
+.cutin img.cutin-media { object-fit: contain; object-position: right bottom; opacity: 1; }
+.cutin.has-img { align-items: flex-start; text-align: left; padding-right: 42%; }
+.cutin.has-img img.cutin-media { left: auto; width: 45%; }

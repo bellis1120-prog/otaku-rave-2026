@@ -1,2 +1,5 @@
 .claude/
 .DS_Store
+
+# スロット素材の元写真（公開しない）
+assets/slot/originals/

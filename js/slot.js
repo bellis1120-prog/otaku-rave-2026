@@ -48,7 +48,7 @@
   /* ---------- 絵柄の描画 ---------- */
   const symbolHtml = (id) => {
     const s = S.symbols[id];
-    if (s.img) return `<div class="sym" data-id="${id}"><img src="${escapeHtml(s.img)}" alt="${escapeHtml(s.name)}"></div>`;
+    if (s.img) return `<div class="sym img" data-id="${id}" style="--c:${s.color}"><img src="${escapeHtml(s.img)}" alt="${escapeHtml(s.name)}"></div>`;
     return `<div class="sym text" data-id="${id}" style="--c:${s.color}"><span>${escapeHtml(s.short)}</span></div>`;
   };
 
@@ -200,7 +200,7 @@
     let media = "";
     if (c.video) media = `<video class="cutin-media" src="${escapeHtml(c.video)}" autoplay muted playsinline></video>`;
     else if (c.image) media = `<img class="cutin-media" src="${escapeHtml(c.image)}" alt="">`;
-    box.className = `cutin${big ? " big" : ""}`;
+    box.className = `cutin${big ? " big" : ""}${!c.video && c.image ? " has-img" : ""}`;
     box.innerHTML = `${media}<div class="cutin-who">${escapeHtml(c.who)}</div><div class="cutin-text">${escapeHtml(c.text)}</div>`;
     box.hidden = false;
     if (animeOk) {
@@ -245,7 +245,7 @@
     save();
 
     // レバーを叩いた時点の演出
-    if (fx.ceiling) { navi("ceiling"); await sleep(600); }
+    if (fx.ceiling) { navi("ceiling"); await cutin("ceiling", { ms: 1500 }); }
     if (fx.yuda) { navi("yuda"); await cutin(fx.yuda, { ms: fx.yuda === "yudaBig" ? 1300 : 900 }); }
     if (fx.guppy) {
       await cutin("otona", { ms: 1100 });
@@ -441,6 +441,7 @@
 
   // 前回ボーナス中に閉じた場合も続きから遊べる
   requestAnimationFrame(() => reels.forEach(render));
+  if (S.naviImg) document.querySelector(".navi-who").insertAdjacentHTML("afterbegin", `<img src="${escapeHtml(S.naviImg)}" alt="">`);
   updateHud();
   navi("idle");
 })();
