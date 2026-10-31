@@ -194,16 +194,17 @@
   };
 
   /* ---------- カットイン ---------- */
-  const cutin = async (key, { big = false, ms = 1400 } = {}) => {
-    const c = S.cutins[key];
+  // text・image は配列でも可（出るたびにランダムで1つ）
+  const cutin = (key, opts) => showCutin(S.cutins[key], opts);
+  const showCutin = async (c, { big = false, ms = 1400 } = {}) => {
     const box = $("cutin");
-    // image は配列でも可（出るたびにランダムで1枚）
     const image = Array.isArray(c.image) ? pick(c.image) : c.image;
+    const text = Array.isArray(c.text) ? pick(c.text) : c.text;
     let media = "";
     if (c.video) media = `<video class="cutin-media" src="${escapeHtml(c.video)}" autoplay muted playsinline></video>`;
     else if (image) media = `<img class="cutin-media" src="${escapeHtml(image)}" alt="">`;
     box.className = `cutin${big ? " big" : ""}${!c.video && image ? " has-img" : ""}`;
-    box.innerHTML = `${media}<div class="cutin-who">${escapeHtml(c.who)}</div><div class="cutin-text">${escapeHtml(c.text)}</div>`;
+    box.innerHTML = `${media}<div class="cutin-who">${escapeHtml(c.who)}</div><div class="cutin-text">${escapeHtml(text)}</div>`;
     box.hidden = false;
     if (animeOk) {
       anime({ targets: box, translateX: ["-110%", "0%"], duration: 380, easing: "easeOutExpo" });
@@ -217,6 +218,15 @@
     }
     if (animeOk) await anime({ targets: box, translateX: ["0%", "110%"], duration: 300, easing: "easeInExpo" }).finished;
     box.hidden = true;
+  };
+
+  // 掛け合い：場面ごとのパターンから1つ選び、順にカットインで見せる
+  const talk = async (scene, p = 1) => {
+    const list = S.talks && S.talks[scene];
+    if (!list || !list.length || !chance(p)) return;
+    for (const [who, text] of pick(list)) {
+      await showCutin({ who, text, image: (S.faces || {})[who] || null }, { ms: 1100 + text.length * 25 });
+    }
   };
 
   /* ---------- 1ゲームの流れ ---------- */
@@ -248,14 +258,15 @@
 
     // レバーを叩いた時点の演出
     if (fx.ceiling) { navi("ceiling"); await cutin("ceiling", { ms: 1500 }); }
-    if (fx.yuda) { navi("yuda"); await cutin(fx.yuda, { ms: fx.yuda === "yudaBig" ? 1300 : 900 }); }
+    if (fx.yuda) { navi("yuda"); await cutin(fx.yuda, { ms: fx.yuda === "yudaBig" ? 1300 : 900 }); await talk("yuda", 0.5); }
+    if (!state.bonus && !fx.ceiling && state.sinceBonus > 0 && state.sinceBonus % 100 === 0) await talk("hamari");
     if (fx.guppy) {
       await cutin("otona", { ms: 1100 });
       await cutin("plead", { big: true, ms: 1500 });
       if (fx.guppy === "fail") await cutin("pleadFail", { ms: 1200 });
     }
     machine.classList.toggle("rec", fx.rec);
-    if (fx.rec) navi("rec");
+    if (fx.rec) { navi("rec"); await talk("rec", 0.4); }
     else if (!fx.yuda && !state.bonus) navi("idle");
 
     reels.forEach(startSpin);
@@ -296,7 +307,7 @@
     machine.classList.add("reach");
     navi("reach");
     beep(880, 200, "sawtooth", 0.04);
-    if (current.fx.kairo) { await sleep(300); navi("kairo"); await cutin("kairo", { big: true, ms: 1300 }); }
+    if (current.fx.kairo) { await sleep(300); navi("kairo"); await cutin("kairo", { big: true, ms: 1300 }); await talk("kairo", 0.6); }
     else await sleep(500);
     machine.classList.remove("reach");
     holding = false;
@@ -332,6 +343,7 @@
       pay = S.bonus[outcome].extra;
     } else {
       navi("miss");
+      await talk("idle", 0.04);
     }
 
     if (pay) {
@@ -386,6 +398,7 @@
     if (animeOk) anime({ targets: "#highlight .hl-body", scale: [0.8, 1], opacity: [0, 1], duration: 500, easing: "easeOutBack" });
     await new Promise((r) => ($("hl-close").onclick = r));
     $("highlight").hidden = true;
+    await talk("bonusEnd", 0.5);
   };
 
   const burst = (label) => {
