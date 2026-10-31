@@ -161,8 +161,8 @@
   /* ---------- 画面の更新 ---------- */
   const machine = $("machine");
   // 画面下のセリフ欄。たくあすの実況も、メンバーの掛け合いもここに出す
-  const say = (who, text) => {
-    const face = (S.faces || {})[who];
+  const say = (who, text, faceOverride) => {
+    const face = faceOverride || (S.faces || {})[who];
     $("navi-who").innerHTML = `${face ? `<img src="${escapeHtml(face)}" alt="">` : ""}${escapeHtml(who)}`;
     $("navi-text").textContent = text;
     if (animeOk) anime({ targets: ".navi", opacity: [0.2, 1], translateX: [12, 0], duration: 350, easing: "easeOutQuad" });
@@ -210,8 +210,10 @@
     let media = "";
     if (c.video) media = `<video class="cutin-media" src="${escapeHtml(c.video)}" autoplay muted playsinline></video>`;
     else if (image) media = `<img class="cutin-media" src="${escapeHtml(image)}" alt="">`;
-    box.className = `cutin${big ? " big" : ""}${!c.video && image ? " has-img" : ""}`;
-    box.innerHTML = `${media}<div class="cutin-who">${escapeHtml(c.who)}</div><div class="cutin-text">${escapeHtml(text)}</div>`;
+    // セリフが空なら写真だけを大きく見せる
+    const photoOnly = !text && (image || c.video);
+    box.className = `cutin${big ? " big" : ""}${photoOnly ? " photo-only" : !c.video && image ? " has-img" : ""}`;
+    box.innerHTML = photoOnly ? media : `${media}<div class="cutin-who">${escapeHtml(c.who)}</div><div class="cutin-text">${escapeHtml(text)}</div>`;
     box.hidden = false;
     if (animeOk) {
       anime({ targets: box, translateX: ["-110%", "0%"], duration: 380, easing: "easeOutExpo" });
@@ -241,6 +243,14 @@
     if (!line) return;
     telopShown = true;
     const [who, text, mode] = line;
+    if (mode === "face") {
+      // 変顔：その人のカットイン用の写真だけを見せる
+      const c = Object.values(S.cutins).find((x) => x.who === who && x.image) || {};
+      const image = Array.isArray(c.image) ? pick(c.image) : c.image;
+      await showCutin({ who, text: "", image: image || (S.faces || {})[who] || null }, { big: true, ms: 1300 });
+      say(who, "", image);
+      return;
+    }
     if (mode === "big") await showCutin({ who, text, image: (S.faces || {})[who] || null }, { big: true, ms: 1100 + text.length * 25 });
     say(who, text);
   };
@@ -353,7 +363,7 @@
     machine.classList.add("reach");
     navi("reach");
     beep(880, 200, "sawtooth", 0.04);
-    if (current.fx.kairo) { await sleep(300); navi("kairo"); await cutin("kairo", { big: true, ms: 1300 }); await talk("kairo"); }
+    if (current.fx.kairo) { await sleep(300); navi("kairo"); await cutin("kairo", { big: true, ms: 1500 }); await talk("kairo"); }
     else { await sleep(300); await talk("reach"); }
     machine.classList.remove("reach");
     holding = false;

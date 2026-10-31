@@ -522,3 +522,6 @@ section { padding: clamp(80px, 12vw, 140px) 0; position: relative; }
 .hl-body .bingo-actions { position: relative; z-index: 1; justify-content: flex-start; }
 .cutin { cursor: pointer; }
 
+/* 変顔など、写真だけのカットイン */
+.cutin.photo-only { padding: 0; background: radial-gradient(circle, rgba(139, 92, 255, 0.9), rgba(7, 6, 13, 0.95)); }
+.cutin.photo-only .cutin-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; opacity: 1; z-index: 0; }
