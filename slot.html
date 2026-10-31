@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SLOT｜UCHIKAI 2026</title>
+  <meta name="description" content="UCHIKAI の仲間たちが登場するお遊びスロット。お金は一切使いません。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="logo" href="index.html">UCHI<span>//</span>KAI</a>
+    <button class="nav-toggle" aria-label="メニュー"><span></span><span></span><span></span></button>
+    <nav class="nav">
+      <a href="index.html#about">ABOUT</a>
+      <a href="index.html#bingo">BINGO</a>
+      <a href="index.html#info">INFO</a>
+      <a href="index.html#entry">ENTRY</a>
+      <a href="index.html#entries">ENTRIES</a>
+      <a href="access.html">ACCESS</a>
+      <a href="bingo.html">CARD</a>
+      <a href="slot.html">SLOT</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero" style="padding-bottom:16px">
+      <div class="container">
+        <div class="section-head reveal" style="margin-bottom:0">
+          <h1 class="en">UCHIKAI SLOT</h1>
+          <span class="ja">お遊びスロット（お金は一切使いません）</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding-top:16px">
+      <div class="container slot-wrap">
+        <div class="slot-machine panel glow" id="machine">
+          <div class="slot-hud">
+            <div><span class="lbl">MEDAL</span><b id="medals">0</b></div>
+            <div><span class="lbl">GAME</span><b id="games">0</b></div>
+            <div><span class="lbl">ハマり</span><b id="since">0</b></div>
+          </div>
+
+          <div class="gauge" id="gauge" title="ボーナスなしで一定ゲーム回すと満タン。満タン後は BIG 確定">
+            <span class="gauge-label">たくあすゲージ</span>
+            <div class="gauge-track"><div class="gauge-fill" id="gauge-fill"></div></div>
+          </div>
+
+          <div class="bonus-bar" id="bonus-bar" hidden>
+            <b id="bonus-label"></b> 残り <b id="bonus-left">0</b> G
+          </div>
+
+          <div class="reels-window">
+            <div class="rec-badge" aria-hidden="true">● REC</div>
+            <div class="reel"><div class="reel-strip"></div></div>
+            <div class="reel"><div class="reel-strip"></div></div>
+            <div class="reel"><div class="reel-strip"></div></div>
+            <div class="payline" aria-hidden="true"></div>
+            <div class="reach-badge" aria-hidden="true">REACH!</div>
+            <div class="cutin" id="cutin" hidden></div>
+            <div class="slot-burst" id="slot-burst" hidden></div>
+            <div class="pay" id="pay" aria-live="polite"></div>
+          </div>
+
+          <div class="navi">
+            <span class="navi-who">たくあす</span>
+            <span class="navi-text" id="navi-text"></span>
+          </div>
+
+          <div class="slot-controls">
+            <button class="btn lever" type="button" id="lever">LEVER</button>
+            <div class="stops">
+              <button class="stop" type="button" disabled aria-label="左リールを止める">STOP</button>
+              <button class="stop" type="button" disabled aria-label="中リールを止める">STOP</button>
+              <button class="stop" type="button" disabled aria-label="右リールを止める">STOP</button>
+            </div>
+            <button class="btn" type="button" id="refill" hidden></button>
+            <div class="slot-toggles">
+              <button class="btn ghost" type="button" id="auto"></button>
+              <button class="btn ghost" type="button" id="sound"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel slot-info">
+          <h2 class="slot-h">当たり一覧</h2>
+          <table class="paytable">
+            <tr><th>ヤンチャグッピー ×3</th><td>PREMIUM BIG（30G＋300枚）</td></tr>
+            <tr><th>みつぼん ×3</th><td>BIG BONUS（20G）</td></tr>
+            <tr><th>UCHI//KAI ×3</th><td>REG BONUS（8G）</td></tr>
+            <tr><th>大人グッピー ×3</th><td>10枚</td></tr>
+            <tr><th>🍺 ×3</th><td>4枚</td></tr>
+            <tr><th>REPLAY ×3</th><td>もう1回無料</td></tr>
+          </table>
+          <h2 class="slot-h">アツい演出</h2>
+          <ul class="slot-list">
+            <li><b>ゆだが笑う</b>：大笑いならかなりアツい</li>
+            <li><b>うどんの REC</b>：記録が始まったらチャンス</li>
+            <li><b>かいろの変顔</b>：リーチ中に出たら激アツ</li>
+            <li><b>大人グッピー出現 → みつぼんの懇願</b>：成功すればヤンチャグッピー覚醒</li>
+            <li><b>たくあすゲージ満タン</b>：次は BIG 確定</li>
+          </ul>
+          <h2 class="slot-h">記録</h2>
+          <p class="slot-record">PREMIUM <b id="cnt-yancha">0</b>　BIG <b id="cnt-big">0</b>　REG <b id="cnt-reg">0</b>　最高メダル <b id="best">0</b></p>
+          <p class="tentative" style="margin-top:14px">
+            ※ 遊び方：LEVER（スペースキー）で回転、STOP（1・2・3 キー）でリールを止めます。AUTO STOP をオンにすると自動で止まります。<br>
+            ※ 当たりはレバーを押した瞬間に決まります。お金や景品とは関係のない、完全なお遊びです。<br>
+            ※ メダルはこのブラウザに保存されます。なくなったら少し待つと補充できます。
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="sheet slot-highlight" id="highlight" hidden>
+    <div class="hl-body panel glow" role="dialog" aria-modal="true" aria-labelledby="hl-head">
+      <p class="hl-head" id="hl-head">うどん編集 ハイライト</p>
+      <p class="hl-title" id="hl-title"></p>
+      <dl class="dl">
+        <dt>GAMES</dt><dd><span id="hl-games"></span> G</dd>
+        <dt>獲得</dt><dd><span id="hl-won"></span> 枚</dd>
+        <dt>当選時</dt><dd id="hl-trigger"></dd>
+      </dl>
+      <div class="bingo-actions"><button class="btn" type="button" id="hl-close">OK</button></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a class="logo" href="index.html">UCHI<span>//</span>KAI</a>
+      <p class="footer-note">本イベントは完全招待制・非営利の、身内で楽しむプライベートイベントです。招待者以外の参加はできません。</p>
+      <p>© 2026 UCHIKAI 実行委員会</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/slot-config.js"></script>
+  <script src="js/slot.js"></script>
+</body>
+</html>
