@@ -221,8 +221,9 @@
   };
 
   // 掛け合い：場面ごとのパターンから1つ選び、順にカットインで見せる
-  const talk = async (scene, p = 1) => {
+  const talk = async (scene) => {
     const list = S.talks && S.talks[scene];
+    const p = (S.talkRates || {})[scene] ?? 1;
     if (!list || !list.length || !chance(p)) return;
     for (const [who, text] of pick(list)) {
       await showCutin({ who, text, image: (S.faces || {})[who] || null }, { ms: 1100 + text.length * 25 });
@@ -258,15 +259,15 @@
 
     // レバーを叩いた時点の演出
     if (fx.ceiling) { navi("ceiling"); await cutin("ceiling", { ms: 1500 }); }
-    if (fx.yuda) { navi("yuda"); await cutin(fx.yuda, { ms: fx.yuda === "yudaBig" ? 1300 : 900 }); await talk("yuda", 0.5); }
-    if (!state.bonus && !fx.ceiling && state.sinceBonus > 0 && state.sinceBonus % 100 === 0) await talk("hamari");
+    if (fx.yuda) { navi("yuda"); await cutin(fx.yuda, { ms: fx.yuda === "yudaBig" ? 1300 : 900 }); await talk("yuda"); }
+    if (!state.bonus && !fx.ceiling && state.sinceBonus > 0 && state.sinceBonus % (S.hamariEvery || 100) === 0) await talk("hamari");
     if (fx.guppy) {
       await cutin("otona", { ms: 1100 });
       await cutin("plead", { big: true, ms: 1500 });
       if (fx.guppy === "fail") await cutin("pleadFail", { ms: 1200 });
     }
     machine.classList.toggle("rec", fx.rec);
-    if (fx.rec) { navi("rec"); await talk("rec", 0.4); }
+    if (fx.rec) { navi("rec"); await talk("rec"); }
     else if (!fx.yuda && !state.bonus) navi("idle");
 
     reels.forEach(startSpin);
@@ -307,8 +308,8 @@
     machine.classList.add("reach");
     navi("reach");
     beep(880, 200, "sawtooth", 0.04);
-    if (current.fx.kairo) { await sleep(300); navi("kairo"); await cutin("kairo", { big: true, ms: 1300 }); await talk("kairo", 0.6); }
-    else await sleep(500);
+    if (current.fx.kairo) { await sleep(300); navi("kairo"); await cutin("kairo", { big: true, ms: 1300 }); await talk("kairo"); }
+    else { await sleep(300); await talk("reach"); }
     machine.classList.remove("reach");
     holding = false;
     setStopButtons(true);
@@ -338,12 +339,13 @@
     } else if (outcome === "otona" || outcome === "drink") {
       pay = S.symbols[outcome].pay;
       navi("small");
+      await talk("small");
     } else if (BONUS_IDS.includes(outcome)) {
       await startBonus(outcome);
       pay = S.bonus[outcome].extra;
     } else {
       navi("miss");
-      await talk("idle", 0.04);
+      await talk("idle");
     }
 
     if (pay) {
@@ -398,7 +400,7 @@
     if (animeOk) anime({ targets: "#highlight .hl-body", scale: [0.8, 1], opacity: [0, 1], duration: 500, easing: "easeOutBack" });
     await new Promise((r) => ($("hl-close").onclick = r));
     $("highlight").hidden = true;
-    await talk("bonusEnd", 0.5);
+    await talk("bonusEnd");
   };
 
   const burst = (label) => {
