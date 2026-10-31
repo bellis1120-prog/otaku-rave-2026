@@ -16,7 +16,7 @@ window.SLOT_CONFIG = {
    * img: 絵柄画像（正方形の透過PNG推奨。例 "assets/slot/mitsubon.png"）
    */
   symbols: {
-    mitsubon: { name: "みつぼん", short: "みつぼん", color: "#ff2bd6", img: null },
+    mitsubon: { name: "みつぼん", short: "みつぼん", color: "#ff2bd6", img: "assets/slot/mitsubon.png" },
     yancha:   { name: "ヤンチャグッピー", short: "ヤンチャ", color: "#f9f871", img: null },
     otona:    { name: "大人グッピー", short: "大人 グッピー", color: "#9a94bf", img: null, pay: 10 },
     logo:     { name: "UCHIKAI", short: "UCHI//KAI", color: "#19f0ff", img: null },
@@ -69,8 +69,8 @@ window.SLOT_CONFIG = {
     plead:        { who: "みつぼん", text: "グッピーさぁぁぁん！！元に戻ってくれぇぇぇ！！", video: null, image: null },
     pleadFail:    { who: "大人グッピー", text: "俺はもう、あの頃の俺じゃないんだ。", video: null, image: null },
     yancha:       { who: "ヤンチャグッピー", text: "……しゃあねぇな。戻ってやるよ。", video: null, image: null },
-    scream:       { who: "みつぼん", text: "うおおおおおおおおおお！！！！", video: null, image: null },
-    reg:          { who: "みつぼん", text: "よっしゃああああ！", video: null, image: null },
+    scream:       { who: "みつぼん", text: "うおおおおおおおおおお！！！！", video: null, image: "assets/slot/mitsubon-scream.png" },
+    reg:          { who: "みつぼん", text: "よっしゃああああ！", video: null, image: "assets/slot/mitsubon-scream.png" },
     highlight:    { who: "うどん", text: "今の、ちゃんと撮っといたよ。", video: null, image: null },
     ceiling:      { who: "たくあす", text: "……フッ。ゲージ満タン、次は確定ですぞ", video: null, image: "assets/slot/takuasu.png" },
   },
