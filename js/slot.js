@@ -160,10 +160,17 @@
 
   /* ---------- 画面の更新 ---------- */
   const machine = $("machine");
+  // 画面下のセリフ欄。たくあすの実況も、メンバーの掛け合いもここに出す
+  const say = (who, text) => {
+    const face = (S.faces || {})[who];
+    $("navi-who").innerHTML = `${face ? `<img src="${escapeHtml(face)}" alt="">` : ""}${escapeHtml(who)}`;
+    $("navi-text").textContent = text;
+    if (animeOk) anime({ targets: ".navi", opacity: [0.2, 1], translateX: [12, 0], duration: 350, easing: "easeOutQuad" });
+  };
+  // たくあすの実況。このゲームで掛け合いのセリフを出したときは上書きしない
   const navi = (key) => {
-    const line = pick(S.navi[key]);
-    $("navi-text").textContent = line;
-    if (animeOk) anime({ targets: "#navi-text", opacity: [0, 1], translateX: [12, 0], duration: 350, easing: "easeOutQuad" });
+    if (telopShown) return;
+    say("たくあす", pick(S.navi[key]));
   };
   const updateHud = () => {
     $("medals").textContent = state.medals;
@@ -227,34 +234,31 @@
   /* ---------- テロップ（掛け合い・アニメ討論会） ----------
    * ゲームを止めないよう、セリフは1ゲームにつき1行ずつリール上のテロップで流す */
   const telopQueue = [];
-  let telopShown = false; // このゲームでもうテロップを更新したか
-  const showNextTelop = () => {
+  let telopShown = false; // このゲームでもう掛け合いのセリフを出したか
+  // 3つ目に "big" が付いたセリフは、大きなカットインで見せてから下の欄にも残す
+  const showNextTelop = async () => {
     const line = telopQueue.shift();
     if (!line) return;
     telopShown = true;
-    const [who, text] = line;
-    const face = (S.faces || {})[who];
-    const el = $("telop");
-    el.classList.toggle("heading", who === "アニメ討論会");
-    el.innerHTML = `${face ? `<img src="${escapeHtml(face)}" alt="">` : ""}<span class="telop-who">${escapeHtml(who)}</span><span class="telop-text">${escapeHtml(text)}</span>`;
-    el.classList.remove("empty");
-    if (animeOk) anime({ targets: el, translateX: ["40%", "0%"], opacity: [0, 1], duration: 420, easing: "easeOutExpo" });
+    const [who, text, mode] = line;
+    if (mode === "big") await showCutin({ who, text, image: (S.faces || {})[who] || null }, { big: true, ms: 1100 + text.length * 25 });
+    say(who, text);
   };
-  const queueTelop = (lines) => {
+  const queueTelop = async (lines) => {
     telopQueue.push(...lines);
-    if (!telopShown) showNextTelop();
+    if (!telopShown) await showNextTelop();
   };
 
   // 掛け合い：場面ごとのパターンから1つ選んでテロップに積む
-  const talk = (scene) => {
+  const talk = async (scene) => {
     const list = S.talks && S.talks[scene];
     const p = (S.talkRates || {})[scene] ?? 1;
     if (!list || !list.length || !chance(p)) return;
-    queueTelop(pick(list));
+    await queueTelop(pick(list));
   };
 
   // ボーナス中のアニメ討論会：まだ出ていない作品から1つ選び、見出しから順にテロップに積む
-  const queueAnimeDebate = () => {
+  const queueAnimeDebate = async () => {
     const list = window.SLOT_ANIME || [];
     if (!list.length) return;
     let seen = state.animeSeen || [];
@@ -263,7 +267,7 @@
     const a = pick(rest);
     state.animeSeen = [...seen, a.title];
     save();
-    queueTelop([["アニメ討論会", `『${a.title}』`], ...a.lines]);
+    await queueTelop([["アニメ討論会", `『${a.title}』`, "big"], ...a.lines]);
   };
 
   /* ---------- 1ゲームの流れ ---------- */
@@ -295,21 +299,20 @@
 
     // テロップは1ゲーム1行。ボーナス中は討論会のセリフが途切れないよう補充する
     telopShown = false;
-    if (state.bonus && !telopQueue.length) queueAnimeDebate();
-    else showNextTelop();
-    if (!telopShown) $("telop").classList.add("empty");
+    if (state.bonus && !telopQueue.length) await queueAnimeDebate();
+    else await showNextTelop();
 
     // レバーを叩いた時点の演出
     if (fx.ceiling) { navi("ceiling"); await cutin("ceiling", { ms: 1500 }); }
-    if (fx.yuda) { navi("yuda"); await cutin(fx.yuda, { ms: fx.yuda === "yudaBig" ? 1300 : 900 }); talk("yuda"); }
-    if (!state.bonus && !fx.ceiling && state.sinceBonus > 0 && state.sinceBonus % (S.hamariEvery || 100) === 0) talk("hamari");
+    if (fx.yuda) { navi("yuda"); await cutin(fx.yuda, { ms: fx.yuda === "yudaBig" ? 1300 : 900 }); await talk("yuda"); }
+    if (!state.bonus && !fx.ceiling && state.sinceBonus > 0 && state.sinceBonus % (S.hamariEvery || 100) === 0) await talk("hamari");
     if (fx.guppy) {
       await cutin("otona", { ms: 1100 });
       await cutin("plead", { big: true, ms: 1500 });
       if (fx.guppy === "fail") await cutin("pleadFail", { ms: 1200 });
     }
     machine.classList.toggle("rec", fx.rec);
-    if (fx.rec) { navi("rec"); talk("rec"); }
+    if (fx.rec) { navi("rec"); await talk("rec"); }
     else if (!fx.yuda && !state.bonus) navi("idle");
 
     reels.forEach(startSpin);
@@ -350,8 +353,8 @@
     machine.classList.add("reach");
     navi("reach");
     beep(880, 200, "sawtooth", 0.04);
-    if (current.fx.kairo) { await sleep(300); navi("kairo"); await cutin("kairo", { big: true, ms: 1300 }); talk("kairo"); }
-    else { await sleep(500); talk("reach"); }
+    if (current.fx.kairo) { await sleep(300); navi("kairo"); await cutin("kairo", { big: true, ms: 1300 }); await talk("kairo"); }
+    else { await sleep(300); await talk("reach"); }
     machine.classList.remove("reach");
     holding = false;
     setStopButtons(true);
@@ -381,13 +384,13 @@
     } else if (outcome === "otona" || outcome === "drink") {
       pay = S.symbols[outcome].pay;
       navi("small");
-      talk("small");
+      await talk("small");
     } else if (BONUS_IDS.includes(outcome)) {
       await startBonus(outcome);
       pay = S.bonus[outcome].extra;
     } else {
       navi("miss");
-      talk("idle");
+      await talk("idle");
     }
 
     if (pay) {
@@ -445,7 +448,7 @@
     // 討論会の残りは持ち越さない
     telopQueue.length = 0;
     telopShown = false;
-    talk("bonusEnd");
+    await talk("bonusEnd");
   };
 
   const burst = (label) => {
@@ -504,7 +507,6 @@
 
   // 前回ボーナス中に閉じた場合も続きから遊べる
   requestAnimationFrame(() => reels.forEach(render));
-  if (S.naviImg) document.querySelector(".navi-who").insertAdjacentHTML("afterbegin", `<img src="${escapeHtml(S.naviImg)}" alt="">`);
   updateHud();
   navi("idle");
 })();

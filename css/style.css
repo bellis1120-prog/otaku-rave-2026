@@ -522,16 +522,3 @@ section { padding: clamp(80px, 12vw, 140px) 0; position: relative; }
 .hl-body .bingo-actions { position: relative; z-index: 1; justify-content: flex-start; }
 .cutin { cursor: pointer; }
 
-/* 掛け合い・アニメ討論会のテロップ（1ゲーム1行） */
-.telop {
-  display: flex; align-items: center; gap: 8px; min-height: 52px; margin-bottom: 10px; padding: 6px 12px;
-  border-radius: 10px; background: linear-gradient(90deg, rgba(255, 43, 214, 0.2), rgba(139, 92, 255, 0.12));
-  border-left: 3px solid var(--pink); font-size: 13px; line-height: 1.4; overflow: hidden; transition: opacity 0.3s;
-}
-.telop.empty { opacity: 0; }
-.telop img { flex: none; width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: #0e0b1c; }
-.telop-who { flex: none; font-size: 11px; color: var(--yellow); }
-.telop-text { font-weight: 700; }
-.telop.heading { border-left-color: var(--yellow); background: linear-gradient(90deg, rgba(249, 248, 113, 0.18), rgba(139, 92, 255, 0.12)); }
-.telop.heading .telop-who { color: var(--violet); }
-.telop.heading .telop-text { color: var(--yellow); font-size: 15px; }
