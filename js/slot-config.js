@@ -95,6 +95,8 @@ window.SLOT_CONFIG = {
    */
   talkRates: { yuda: 0.8, rec: 0.7, kairo: 0.9, reach: 0.5, small: 0.15, bonusEnd: 0.8, idle: 0.12 },
   hamariEvery: 50,
+  // ボーナス中の「アニメ討論会」を出す間隔（ボーナスの1ゲーム目と、以降このゲーム数ごと）。台本は slot-anime.js
+  animeEvery: 5,
   faces: {
     "みつぼん": "assets/slot/mitsubon.png",
     "大人グッピー": "assets/slot/otona.png",

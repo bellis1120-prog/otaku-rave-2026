@@ -210,12 +210,15 @@
       anime({ targets: box, translateX: ["-110%", "0%"], duration: 380, easing: "easeOutExpo" });
       if (big) anime({ targets: machine, translateX: [-8, 8, -6, 6, 0], duration: 500, easing: "linear" });
     }
+    // カットインはタップで次へ進められる
+    const tapped = new Promise((r) => (box.onclick = r));
     const video = box.querySelector("video");
     if (video) {
-      await Promise.race([new Promise((r) => (video.onended = r)), sleep(6000)]);
+      await Promise.race([new Promise((r) => (video.onended = r)), sleep(6000), tapped]);
     } else {
-      await sleep(ms);
+      await Promise.race([sleep(ms), tapped]);
     }
+    box.onclick = null;
     if (animeOk) await anime({ targets: box, translateX: ["0%", "110%"], duration: 300, easing: "easeInExpo" }).finished;
     box.hidden = true;
   };
@@ -228,6 +231,24 @@
     for (const [who, text] of pick(list)) {
       await showCutin({ who, text, image: (S.faces || {})[who] || null }, { ms: 1100 + text.length * 25 });
     }
+  };
+
+  // ボーナス中のアニメ討論会：まだ出ていない作品から1つ選んで掛け合いを見せる
+  const animeDebate = async () => {
+    const list = window.SLOT_ANIME || [];
+    if (!list.length) return;
+    let seen = state.animeSeen || [];
+    let rest = list.filter((a) => !seen.includes(a.title));
+    if (!rest.length) { seen = []; rest = list; }
+    const a = pick(rest);
+    state.animeSeen = [...seen, a.title];
+    save();
+    machine.classList.add("debate");
+    await showCutin({ who: "アニメ討論会", text: `『${a.title}』`, image: null }, { big: true, ms: 1300 });
+    for (const [who, text] of a.lines) {
+      await showCutin({ who, text, image: (S.faces || {})[who] || null }, { ms: 1100 + text.length * 30 });
+    }
+    machine.classList.remove("debate");
   };
 
   /* ---------- 1ゲームの流れ ---------- */
@@ -256,6 +277,11 @@
     current = { outcome, fx, stops };
     updateHud();
     save();
+
+    if (outcome === "bonusGame") {
+      const played = S.bonus[state.bonus.type].games - state.bonus.left;
+      if (played % (S.animeEvery || 5) === 0) await animeDebate();
+    }
 
     // レバーを叩いた時点の演出
     if (fx.ceiling) { navi("ceiling"); await cutin("ceiling", { ms: 1500 }); }
