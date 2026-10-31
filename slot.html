@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=2026103102">
+  <link rel="stylesheet" href="css/style.css?v=2026103103">
 </head>
 <body>
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
@@ -56,6 +56,8 @@
           <div class="bonus-bar" id="bonus-bar" hidden>
             <b id="bonus-label"></b> 残り <b id="bonus-left">0</b> G
           </div>
+
+          <div class="telop empty" id="telop" aria-live="polite"></div>
 
           <div class="reels-window">
             <div class="rec-badge" aria-hidden="true">● REC</div>
@@ -106,7 +108,7 @@
             <li><b>かいろの変顔</b>：リーチ中に出たら激アツ</li>
             <li><b>大人グッピー出現 → みつぼんの懇願</b>：成功すればヤンチャグッピー覚醒</li>
             <li><b>たくあすゲージ満タン</b>：次は BIG 確定</li>
-            <li><b>ボーナス中はアニメ討論会</b>：メンバーがアニメの感想で言い合います（カットインはタップで次へ）</li>
+            <li><b>ボーナス中はアニメ討論会</b>：1ゲームごとに1行ずつ、メンバーがアニメの感想で言い合います</li>
           </ul>
           <h2 class="slot-h">記録</h2>
           <p class="slot-record">PREMIUM <b id="cnt-yancha">0</b>　BIG <b id="cnt-big">0</b>　REG <b id="cnt-reg">0</b>　最高メダル <b id="best">0</b></p>
@@ -143,10 +145,10 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
-  <script src="js/config.js?v=2026103102"></script>
-  <script src="js/main.js?v=2026103102"></script>
-  <script src="js/slot-config.js?v=2026103102"></script>
-  <script src="js/slot-anime.js?v=2026103102"></script>
-  <script src="js/slot.js?v=2026103102"></script>
+  <script src="js/config.js?v=2026103103"></script>
+  <script src="js/main.js?v=2026103103"></script>
+  <script src="js/slot-config.js?v=2026103103"></script>
+  <script src="js/slot-anime.js?v=2026103103"></script>
+  <script src="js/slot.js?v=2026103103"></script>
 </body>
 </html>

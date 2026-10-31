@@ -224,17 +224,37 @@
   };
 
   // 掛け合い：場面ごとのパターンから1つ選び、順にカットインで見せる
-  const talk = async (scene) => {
+  /* ---------- テロップ（掛け合い・アニメ討論会） ----------
+   * ゲームを止めないよう、セリフは1ゲームにつき1行ずつリール上のテロップで流す */
+  const telopQueue = [];
+  let telopShown = false; // このゲームでもうテロップを更新したか
+  const showNextTelop = () => {
+    const line = telopQueue.shift();
+    if (!line) return;
+    telopShown = true;
+    const [who, text] = line;
+    const face = (S.faces || {})[who];
+    const el = $("telop");
+    el.classList.toggle("heading", who === "アニメ討論会");
+    el.innerHTML = `${face ? `<img src="${escapeHtml(face)}" alt="">` : ""}<span class="telop-who">${escapeHtml(who)}</span><span class="telop-text">${escapeHtml(text)}</span>`;
+    el.classList.remove("empty");
+    if (animeOk) anime({ targets: el, translateX: ["40%", "0%"], opacity: [0, 1], duration: 420, easing: "easeOutExpo" });
+  };
+  const queueTelop = (lines) => {
+    telopQueue.push(...lines);
+    if (!telopShown) showNextTelop();
+  };
+
+  // 掛け合い：場面ごとのパターンから1つ選んでテロップに積む
+  const talk = (scene) => {
     const list = S.talks && S.talks[scene];
     const p = (S.talkRates || {})[scene] ?? 1;
     if (!list || !list.length || !chance(p)) return;
-    for (const [who, text] of pick(list)) {
-      await showCutin({ who, text, image: (S.faces || {})[who] || null }, { ms: 1100 + text.length * 25 });
-    }
+    queueTelop(pick(list));
   };
 
-  // ボーナス中のアニメ討論会：まだ出ていない作品から1つ選んで掛け合いを見せる
-  const animeDebate = async () => {
+  // ボーナス中のアニメ討論会：まだ出ていない作品から1つ選び、見出しから順にテロップに積む
+  const queueAnimeDebate = () => {
     const list = window.SLOT_ANIME || [];
     if (!list.length) return;
     let seen = state.animeSeen || [];
@@ -243,12 +263,7 @@
     const a = pick(rest);
     state.animeSeen = [...seen, a.title];
     save();
-    machine.classList.add("debate");
-    await showCutin({ who: "アニメ討論会", text: `『${a.title}』`, image: null }, { big: true, ms: 1300 });
-    for (const [who, text] of a.lines) {
-      await showCutin({ who, text, image: (S.faces || {})[who] || null }, { ms: 1100 + text.length * 30 });
-    }
-    machine.classList.remove("debate");
+    queueTelop([["アニメ討論会", `『${a.title}』`], ...a.lines]);
   };
 
   /* ---------- 1ゲームの流れ ---------- */
@@ -278,22 +293,23 @@
     updateHud();
     save();
 
-    if (outcome === "bonusGame") {
-      const played = S.bonus[state.bonus.type].games - state.bonus.left;
-      if (played % (S.animeEvery || 5) === 0) await animeDebate();
-    }
+    // テロップは1ゲーム1行。ボーナス中は討論会のセリフが途切れないよう補充する
+    telopShown = false;
+    if (state.bonus && !telopQueue.length) queueAnimeDebate();
+    else showNextTelop();
+    if (!telopShown) $("telop").classList.add("empty");
 
     // レバーを叩いた時点の演出
     if (fx.ceiling) { navi("ceiling"); await cutin("ceiling", { ms: 1500 }); }
-    if (fx.yuda) { navi("yuda"); await cutin(fx.yuda, { ms: fx.yuda === "yudaBig" ? 1300 : 900 }); await talk("yuda"); }
-    if (!state.bonus && !fx.ceiling && state.sinceBonus > 0 && state.sinceBonus % (S.hamariEvery || 100) === 0) await talk("hamari");
+    if (fx.yuda) { navi("yuda"); await cutin(fx.yuda, { ms: fx.yuda === "yudaBig" ? 1300 : 900 }); talk("yuda"); }
+    if (!state.bonus && !fx.ceiling && state.sinceBonus > 0 && state.sinceBonus % (S.hamariEvery || 100) === 0) talk("hamari");
     if (fx.guppy) {
       await cutin("otona", { ms: 1100 });
       await cutin("plead", { big: true, ms: 1500 });
       if (fx.guppy === "fail") await cutin("pleadFail", { ms: 1200 });
     }
     machine.classList.toggle("rec", fx.rec);
-    if (fx.rec) { navi("rec"); await talk("rec"); }
+    if (fx.rec) { navi("rec"); talk("rec"); }
     else if (!fx.yuda && !state.bonus) navi("idle");
 
     reels.forEach(startSpin);
@@ -334,8 +350,8 @@
     machine.classList.add("reach");
     navi("reach");
     beep(880, 200, "sawtooth", 0.04);
-    if (current.fx.kairo) { await sleep(300); navi("kairo"); await cutin("kairo", { big: true, ms: 1300 }); await talk("kairo"); }
-    else { await sleep(300); await talk("reach"); }
+    if (current.fx.kairo) { await sleep(300); navi("kairo"); await cutin("kairo", { big: true, ms: 1300 }); talk("kairo"); }
+    else { await sleep(500); talk("reach"); }
     machine.classList.remove("reach");
     holding = false;
     setStopButtons(true);
@@ -365,13 +381,13 @@
     } else if (outcome === "otona" || outcome === "drink") {
       pay = S.symbols[outcome].pay;
       navi("small");
-      await talk("small");
+      talk("small");
     } else if (BONUS_IDS.includes(outcome)) {
       await startBonus(outcome);
       pay = S.bonus[outcome].extra;
     } else {
       navi("miss");
-      await talk("idle");
+      talk("idle");
     }
 
     if (pay) {
@@ -426,7 +442,10 @@
     if (animeOk) anime({ targets: "#highlight .hl-body", scale: [0.8, 1], opacity: [0, 1], duration: 500, easing: "easeOutBack" });
     await new Promise((r) => ($("hl-close").onclick = r));
     $("highlight").hidden = true;
-    await talk("bonusEnd");
+    // 討論会の残りは持ち越さない
+    telopQueue.length = 0;
+    telopShown = false;
+    talk("bonusEnd");
   };
 
   const burst = (label) => {
