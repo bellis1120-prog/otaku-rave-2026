@@ -22,7 +22,7 @@ window.SLOT_CONFIG = {
     logo:     { name: "UCHIKAI", short: "UCHI//KAI", color: "#19f0ff", img: null },
     drink:    { name: "ドリンク", short: "🍺", color: "#ffb347", img: null, pay: 4 },
     replay:   { name: "リプレイ", short: "REPLAY", color: "#3ddc97", img: null },
-    yuda:     { name: "ゆだ", short: "ゆだ", color: "#ff7a59", img: null },
+    yuda:     { name: "ゆだ", short: "ゆだ", color: "#ff7a59", img: "assets/slot/yuda.png" },
     udon:     { name: "うどん", short: "うどん", color: "#e8e3c9", img: "assets/slot/udon.png" },
     kairo:    { name: "かいろ", short: "かいろ", color: "#8b5cff", img: "assets/slot/kairo.png" },
     takuasu:  { name: "たくあす", short: "たくあす", color: "#6fd3ff", img: "assets/slot/takuasu.png" },
@@ -62,8 +62,8 @@ window.SLOT_CONFIG = {
    * どちらも null のあいだは who と text だけの文字演出になります
    */
   cutins: {
-    yudaSmall:    { who: "ゆだ", text: "ふふっｗ", video: null, image: null },
-    yudaBig:      { who: "ゆだ", text: "ｗｗｗｗｗｗｗ！！", video: null, image: null },
+    yudaSmall:    { who: "ゆだ", text: "ふふっｗ", video: null, image: "assets/slot/yuda.png" },
+    yudaBig:      { who: "ゆだ", text: "ｗｗｗｗｗｗｗ！！", video: null, image: "assets/slot/yuda-cutin.png" },
     kairo:        { who: "かいろ", text: "（渾身の変顔）", video: null, image: ["assets/slot/kairo-face1.png", "assets/slot/kairo-face2.png"] },
     otona:        { who: "大人グッピー", text: "……落ち着けよ、みつぼん。", video: null, image: "assets/slot/otona-cutin.png" },
     plead:        { who: "みつぼん", text: "グッピーさぁぁぁん！！元に戻ってくれぇぇぇ！！", video: null, image: null },
